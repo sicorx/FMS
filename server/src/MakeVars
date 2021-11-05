@@ -1,0 +1,44 @@
+
+CC = gcc
+#CC = g++
+#CC = arm-linux-gcc
+RM = rm
+MV = mv
+INSTALL = install
+
+BASE_DIR = /home/fms/server
+SRC_DIR	 = $(BASE_DIR)/src
+LIB_DIR  = $(SRC_DIR)/lib
+INC_DIR  = $(SRC_DIR)/include
+BIN_DIR  = $(BASE_DIR)/bin
+
+CFLAGS  = -O2 -Wall
+CFLAGS += -Wstrict-prototypes
+CFLAGS += -fomit-frame-pointer
+CFLAGS += -funroll-loops
+CFLAGS += -std=c99
+
+#CFLAGS += -march=i686
+CFLAGS += -march=native
+
+CFLAGS += -D_GNU_SOURCE
+CFLAGS += -D_REENTRANT
+
+#TEST 모드 
+#사용시 장비 하나만 사용 define.h에서 장비 시퀀스 변경
+#미사용시 정상 작동
+#CFLAGS += -D_TEST
+
+#DEBUG 모드
+#사용시 정상 로그 찍음
+#미사용시 에러 로그만 찍음
+CFLAGS += -DDEBUG
+
+
+#로그
+#사용시 컬러로 찍음
+#미사용시 텍스트로 찍음
+CFLAGS += -DCOLOR
+
+INS_MOD = --mode 755 --strip
+
