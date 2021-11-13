@@ -1126,6 +1126,39 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i==38) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[84], p[85]) / 10.;	// 전류 최대값 3(A)
 				else if(i==39) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[86], p[87]);		// 전력 최대값(W)
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+			case DPM_ACCURA3700 :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  3], p[  2], p[  1], p[  0]);	// Voltage LN A
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  7], p[  6], p[  5], p[  4]);	// Voltage LN B
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 11], p[ 10], p[  9], p[  8]);	// Voltage LN C
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 19], p[ 18], p[ 17], p[ 16]);	// Current A
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 23], p[ 22], p[ 21], p[ 20]);	// Current B
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 27], p[ 26], p[ 25], p[ 24]);	// Current C
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 35], p[ 34], p[ 33], p[ 32]);	// Voltage LL AB
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 39], p[ 38], p[ 37], p[ 36]);	// Voltage LL BC
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 43], p[ 42], p[ 41], p[ 40]);	// Voltage LL CA
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 63], p[ 62], p[ 61], p[ 60]);	// KW total
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[111], p[110], p[109], p[108]);	// Power factor total
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[120], p[121], p[122], p[123]);	// KWh received
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[124], p[125], p[126], p[127]);	// KWh delivered
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[143], p[142], p[141], p[140]);	// Frequency
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			case DPM_ACCURA2300S :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  3], p[  2], p[  1], p[  0]);	// Voltage LN A
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  7], p[  6], p[  5], p[  4]);	// Voltage LN B
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 11], p[ 10], p[  9], p[  8]);	// Voltage LN C
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 19], p[ 18], p[ 17], p[ 16]);	// Voltage LL AB
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 23], p[ 22], p[ 21], p[ 20]);	// Voltage LL BC
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 27], p[ 26], p[ 25], p[ 24]);	// Voltage LL CA
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[103], p[102], p[101], p[100]);	// Frequency
+
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[123], p[122], p[121], p[120]);	// Current A
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[127], p[126], p[125], p[124]);	// Current B
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[131], p[130], p[129], p[128]);	// Current C
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[255], p[254], p[253], p[252]);	// Active Power Ptot
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[292], p[293], p[294], p[295]);	// KWh received
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[296], p[297], p[298], p[299]);	// KWh delivered
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 			//분전반 끝
 			
 			//STS 시작
@@ -1291,6 +1324,17 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]) / 10.;		// 온도
 				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]) / 10.;		// 습도
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+				
+			case P_300C :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 3], p[ 2], p[ 1], p[ 0]) / 100.;		// 온도
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 7], p[ 6], p[ 5], p[ 4]) / 100.;		// 습도
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[11], p[10], p[ 9], p[ 8]) / 100.;		// 습도
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			case SP_INC :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]) / 10.; // 온도
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]) / 10.; // 습도
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 			//온습도 끝
 
 			//계전기 시작
@@ -1311,6 +1355,9 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[42], p[43]);					// 유효 전력량
 				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[44], p[45], p[46], p[47]);		// 무효 전력량
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+			case GDR :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]);					// Ground Current RMS
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 			//누수 거리형 시작
 			case TTDM128 :
 				if(i == 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[0],p[1]) & 0x0001 ? (float)get_short_value(p[2], p[3]) / 12.796 : 0.0;	//누수거리
@@ -1327,12 +1374,104 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 
+			case LBSM200 :
+				if(i == 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : p[0] & 0x01 ? (float)get_int_value2(p[2], p[3]) / 10. : 0.0;	//누수거리
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
 			//BMS 시작
 			case BTECH :
 				k = (i/3) * 4;
 				     if((i % 3) == 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(buff[k+3], buff[k+2], buff[k+1], buff[k]);				// 전압
 				else if((i % 3) == 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(buff[k+1027], buff[k+1026], buff[k+1025], buff[k+1024]);	// 온도
 				else if((i % 3) == 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(buff[k+2051], buff[k+2050], buff[k+2049], buff[k+2048]);	// 저항
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+			//ALTS 시작
+			case ILJIN_ALTS :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]);					// Ia RMS
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]);					// Ib RMS
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 4], p[ 5]);					// Ic RMS
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 6], p[ 7]);					// In RMS
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 9]);					// Source side Va RMS
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[10], p[11]);					// Source side Vb RMS
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[12], p[13]);					// Source side Vc RMS
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[14], p[15]);					// Source side Vo RMS
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[16], p[17]);					// Load side Va RMS
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[18], p[19]);					// Load side Vb RMS
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[20], p[21]);					// Load side Vc RMS
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[22], p[23]);					// Load side Vo RMS
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[24], p[25]);					// KVAa
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[26], p[27]);					// KVAb
+				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[28], p[29]);					// KVAc
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[30], p[31]);					// KVA3ph
+				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[32], p[33]);					// KWa
+				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[34], p[35]);					// KWb
+				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[36], p[37]);					// KWc
+				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[38], p[39]);					// KW3ph
+				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[40], p[41]);					// KVARa
+				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[42], p[43]);					// KVARb
+				else if(i==22) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[44], p[45]);					// KVARc
+				else if(i==23) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[46], p[47]);					// KVAR3ph
+				else if(i==24) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[48], p[49]);					// PFa
+				else if(i==25) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[50], p[51]);					// PFb
+				else if(i==26) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[52], p[53]);					// PFc
+				else if(i==27) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[54], p[55]);					// PF3ph
+				else if(i==28) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[56], p[57]);					// Frequency
+				else if(i==29) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[58], p[59]);					// Temperature				
+				else if(i==30) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[60], p[61]);					// Remote/Local
+				else if(i==31) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[62], p[63]);					// Switch Status1
+				else if(i==32) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[64], p[65]);					// Switch Status2
+				else if(i==33) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[66], p[67]);					// Manual/auto
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			//수배전반 시작
+			case PAC100 :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]);	// Phase A voltage(kV)
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 4], p[ 5]);	// Phase B voltage(kV)
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 9]);	// Phase C voltage(kV)
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[18], p[19]);	// Line AB voltage(kV)
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[22], p[23]);	// Line BC voltage(kV)
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[26], p[27]);	// Line CA voltage(kV)
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[28], p[29]);	// Phase A current(kA)
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[32], p[33]);	// Phase B current(kA)
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[36], p[37]);	// Phase C current(kA)
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[40], p[41]);	// Phase A Watt(MW)
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[42], p[43]);	// Phase B Watt(MW)
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[44], p[45]);	// Phase C Watt(MW)
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[46], p[47]);	// 3Phase Watt(MW)
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[48], p[49]);	// 3Phase power factor
+				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[50], p[51]);	// kW-hours import(kWh)
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[52], p[53]) / 100.;	// Frequency(Hz)
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+				
+			case HIMAP_FI :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[  0], p[  1], p[  2], p[  3]) / 10.; // la
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[  4], p[  5], p[  6], p[  7]) / 10.; // lb
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[  8], p[  9], p[ 10], p[ 11]) / 10.; // lb
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[ 70], p[ 71], p[ 72], p[ 73]); // Va
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[ 74], p[ 75], p[ 76], p[ 77]); // Vb
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[ 78], p[ 79], p[ 80], p[ 81]); // Vc
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[102], p[103], p[104], p[105]) / 10.; // 유효전력
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[110], p[111], p[112], p[113]) / 100.; // power factor
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[114], p[115], p[116], p[117]) / 1000.; // frequency
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[118], p[119], p[120], p[121]); // 유효전력량
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[164], p[165], p[166], p[167]); // 사고 상 정보
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+				
+			case HIMAP_T :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_uint_value4(p[164], p[165], p[166], p[167]); // 사고 상 정보
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			//지열 시작
+			case EXP40_TTF_DC :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]) / 10.; // 지열입수온도
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]) / 10.; // 지열출수온도
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 4], p[ 5]); // 유량
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 6], p[ 7]); // 순시전력
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 9]); // 누적전력
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[12], p[13]); // 순시열량
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[14], p[15]); // 누적열량
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[18], p[19]) / 10.; // 순시COP1
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[20], p[21]) / 10.; // 순시COP2
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 			default :
 				pthread_mutex_unlock(pStatus->mux);
@@ -1765,6 +1904,15 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 			//항온항습기 끝
 
+			//분전반 시작
+			case DPM_ACCURA3700 :
+				if     (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[145] & 0x01) ? DI_ON : DI_OFF; // status of DI  Channel 5
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[147] & 0x01) ? DI_ON : DI_OFF; // status of DI  Channel 6
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[149] & 0x01) ? DI_ON : DI_OFF; // status of DI  Channel 7
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[151] & 0x01) ? DI_ON : DI_OFF; // status of DI  Channel 8
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+
 			//STS 시작
 			case RTU_SUPER_SWITCH3 :
 				if     (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[248] & 0x01) ? DI_ON : DI_OFF; // 캐비넷온도이상
@@ -1854,22 +2002,24 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 
 			//접점 시작
 			case KM6053 :
-				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x01) ? DI_OFF : DI_ON; // DI00
-				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x02) ? DI_OFF : DI_ON; // DI01
-				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x04) ? DI_OFF : DI_ON; // DI02
-				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x08) ? DI_OFF : DI_ON; // DI03
-				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x10) ? DI_OFF : DI_ON; // DI04
-				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x20) ? DI_OFF : DI_ON; // DI05
-				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x40) ? DI_OFF : DI_ON; // DI06
-				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x80) ? DI_OFF : DI_ON; // DI07
-				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x01) ? DI_OFF : DI_ON; // DI08
-				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x02) ? DI_OFF : DI_ON; // DI09
-				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x04) ? DI_OFF : DI_ON; // DI10
-				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x08) ? DI_OFF : DI_ON; // DI11
-				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x10) ? DI_OFF : DI_ON; // DI12
-				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x20) ? DI_OFF : DI_ON; // DI13
-				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x40) ? DI_OFF : DI_ON; // DI14
+				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x01) ? DI_OFF : DI_ON; // DI00
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x02) ? DI_OFF : DI_ON; // DI01
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x04) ? DI_OFF : DI_ON; // DI02
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x08) ? DI_OFF : DI_ON; // DI03
+				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x10) ? DI_OFF : DI_ON; // DI04
+				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x20) ? DI_OFF : DI_ON; // DI05
+				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x40) ? DI_OFF : DI_ON; // DI06
+				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 1] & 0x80) ? DI_OFF : DI_ON; // DI07
+				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x01) ? DI_OFF : DI_ON; // DI08
+				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x02) ? DI_OFF : DI_ON; // DI09
+				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x04) ? DI_OFF : DI_ON; // DI10
+				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x08) ? DI_OFF : DI_ON; // DI11
+				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x10) ? DI_OFF : DI_ON; // DI12
+				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x20) ? DI_OFF : DI_ON; // DI13
+				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x40) ? DI_OFF : DI_ON; // DI14
+				else if(i==15) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 0] & 0x80) ? DI_OFF : DI_ON; // DI15
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
 			case RM6054 :
 				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x01) ? DI_OFF : DI_ON; // DI00
 				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 4] & 0x02) ? DI_OFF : DI_ON; // DI01
@@ -1918,6 +2068,78 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 
 			case RTU_DPM_GiPAM115FI :
 				if(i==0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[42] & 0x01) ? DI_ON : DI_OFF; // RTU-장비 통신불량
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			//계전기 시작
+			case GDR :
+				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 3] & 0x01) ? DI_ON : DI_OFF; // Power Fail
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 5] & 0x01) ? DI_ON : DI_OFF; // OCGR START
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 5] & 0x02) ? DI_ON : DI_OFF; // TOCGR OP
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[ 5] & 0x04) ? DI_ON : DI_OFF; // IOCGR OP
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			//수배전반 시작
+			case HIMAP_FI :
+				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[161] & 0x01) ? DI_ON : DI_OFF; // CB 상태
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x01) ? DI_ON : DI_OFF; // Digital Input #1(50) 상태
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x02) ? DI_ON : DI_OFF; // Digital Input #2(51) 상태
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x04) ? DI_ON : DI_OFF; // Digital Input #3(52) 상태
+				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x08) ? DI_ON : DI_OFF; // Digital Input #4(53) 상태
+				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x10) ? DI_ON : DI_OFF; // Digital Input #5(54) 상태
+				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x01) ? DI_ON : DI_OFF; // OCR(50) 상태
+				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x02) ? DI_ON : DI_OFF; // OCR(51) 상태
+				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x04) ? DI_ON : DI_OFF; // OCGR(50G) 상태
+				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x08) ? DI_ON : DI_OFF; // OCGR(51G) 상태
+				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x10) ? DI_ON : DI_OFF; // RUVR(27R) 상태
+				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x20) ? DI_ON : DI_OFF; // MUVR(27M) 상태
+				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x40) ? DI_ON : DI_OFF; // SUVR(27S) 상태
+				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x80) ? DI_ON : DI_OFF; // PSR(27P) 상태
+				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x01) ? DI_ON : DI_OFF; // NSR(27N) 상태
+				else if(i==15) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x02) ? DI_ON : DI_OFF; // OVR(59) 상태
+				else if(i==16) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x04) ? DI_ON : DI_OFF; // OVGR(64) 상태
+				else if(i==17) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x08) ? DI_ON : DI_OFF; // DGR(67G) 상태
+				else if(i==18) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x10) ? DI_ON : DI_OFF; // SGR(67G 상태
+				else if(i==19) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x20) ? DI_ON : DI_OFF; // CCS 상태
+				else if(i==20) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x40) ? DI_ON : DI_OFF; // TCS 상태
+				else if(i==21) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x80) ? DI_ON : DI_OFF; // Sys. Alarm 상태
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+				
+			case HIMAP_T :
+				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[161] & 0x01) ? DI_ON : DI_OFF; // CB 상태
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x01) ? DI_ON : DI_OFF; // Digital Input #1(50) 상태
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x02) ? DI_ON : DI_OFF; // Digital Input #2(51) 상태
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x04) ? DI_ON : DI_OFF; // Digital Input #3(52) 상태
+				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x08) ? DI_ON : DI_OFF; // Digital Input #4(53) 상태
+				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[160] & 0x10) ? DI_ON : DI_OFF; // Digital Input #5(54) 상태
+				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x01) ? DI_ON : DI_OFF; // DFR(87T) 상태
+				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x02) ? DI_ON : DI_OFF; // OCR(P50) 상태
+				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x04) ? DI_ON : DI_OFF; // OCR(P51) 상태
+				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x08) ? DI_ON : DI_OFF; // OCR(S50) 상태
+				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x10) ? DI_ON : DI_OFF; // OCR(S51) 상태
+				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x20) ? DI_ON : DI_OFF; // OCGR(50G) 상태
+				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x40) ? DI_ON : DI_OFF; // OCGR(51G) 상태
+				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[163] & 0x80) ? DI_ON : DI_OFF; // DGR(67G) 상태
+				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x01) ? DI_ON : DI_OFF; // SGR(67G) 상태
+				else if(i==15) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x02) ? DI_ON : DI_OFF; // CCS 상태
+				else if(i==16) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x04) ? DI_ON : DI_OFF; // TCS 상태
+				else if(i==17) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[162] & 0x08) ? DI_ON : DI_OFF; // Sys. Alarm 상태
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			//지열 시작
+			case EXP40_TTF_DC :
+				if	   (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x01) ? DI_ON : DI_OFF; // 제어시스템 수동/자동
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x02) ? DI_ON : DI_OFF; // 지열순환펌프1 상태
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x04) ? DI_ON : DI_OFF; // 지열순환펌프2 상태
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x08) ? DI_ON : DI_OFF; // 지열순환펌프3 상태
+				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x10) ? DI_ON : DI_OFF; // 지열히트펌프1 상태
+				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x20) ? DI_ON : DI_OFF; // 지열히트펌프2 상태
+				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x40) ? DI_ON : DI_OFF; // 지열히트펌프3 상태
+				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[22] & 0x80) ? DI_ON : DI_OFF; // 지열히트펌프4 상태
+				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[23] & 0x01) ? DI_ON : DI_OFF; // 지열히트펌프5 상태
+				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[23] & 0x02) ? DI_ON : DI_OFF; // 지열히트펌프6 상태
+				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[23] & 0x04) ? DI_ON : DI_OFF; // 지열순환펌프1 경보
+				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[23] & 0x08) ? DI_ON : DI_OFF; // 지열순환펌프2 경보
+				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[23] & 0x10) ? DI_ON : DI_OFF; // 지열순환펌프3 경보
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 
 			default :

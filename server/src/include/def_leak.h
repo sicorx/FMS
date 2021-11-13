@@ -11,7 +11,8 @@
 #define TTDM128_RECV		0x0907    /* TraceTek TTDM-128 */
 #define NDTECH_LDCM100_110	0x0908    /* ND Tech Modbus타입 누수감지지, LDCM-100, 110 통합용 버전 */
 #define A_LLM1				0x0909    /* Anying */
-#define RTU_TTDM128			0x090A    /* Anying */
+#define RTU_TTDM128			0x090A
+#define LBSM200				0x090B
 
 /* NDTech 누수감지모듈(LDCM-110) 제어 코드 표 */
 #define LDCM_NUM_CMD        0x00    /* NULL          */

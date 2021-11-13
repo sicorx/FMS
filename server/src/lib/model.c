@@ -751,21 +751,6 @@ int communicate_mes100(int fd, unsigned char *buff, int index)
     return 0;
 }
 
-
-int communicate_km6053(int fd, unsigned char *buff, int index)
-{
-    int wbytes = 0;
-    struct equip_conn_info *pConnInfo = conn_info[index];
-    usleep(100000);
-
-    wbytes = make_modbus_frame(index, buff, pConnInfo->id, 4, KM6053_START_ADDR, KM6053_REQ_SIZE, NULL);
-    if(sendto_module(fd, buff, wbytes) != 0)								{ fileLog(WARNING, "SERVER -> KM6053 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
-    if(read_modbus_frame_timeout(index, fd, buff, 2, KM6053_REQ_SIZE) != 0)	{ return -1; }
-
-    return 0;
-}
-
-
 int communicate_rm6054(int fd, unsigned char *buff, int index)
 {
     int wbytes = 0;
@@ -1019,7 +1004,7 @@ int communicate_modbus(int fd, unsigned char *buff, int index)
 {
     int wbytes=0;
 	int cmd=0, addr=0, count=0;
-    unsigned char rxtmp[256];
+    unsigned char rxtmp[1024];
     struct equip_conn_info *pConnInfo = conn_info[index];
 	int prev_idx=0;
     usleep(100000);
@@ -1032,6 +1017,12 @@ int communicate_modbus(int fd, unsigned char *buff, int index)
 		case DPM_GiMACIIPlus	: cmd = GiMACIIPlus_REQ_CMD;	addr = GiMACIIPlus_REQ_ADDR;	count = GiMACIIPlus_REQ_CNT;	break;
 		case DPM_GiPAM115FI		: cmd = GiPAM115FI_REQ_CMD;		addr = GiPAM115FI_REQ_ADDR;		count = GiPAM115FI_REQ_CNT;		break;
 		case DPM_KDY_200		: cmd = KDY200_REQ_CMD;			addr = KDY200_REQ_ADDR;			count = KDY200_REQ_CNT;			break;
+		case HIMAP_FI			: cmd = 0x03;					addr = 0x0000;					count = 87;						break;
+		case HIMAP_T			: cmd = 0x03;					addr = 0x0000;					count = 87;						break;
+		case P_300C				: cmd = 0x04;					addr = 0x0000;					count = 6;						break;
+		case SP_INC				: cmd = 0x03;					addr = 0x0000;					count = 2;						break;
+		case KM6053				: cmd = 0x04;					addr = 0x0080;					count = 1;						break;
+		case LBSM200			: cmd = 0x04;					addr = 0x0001;					count = 2;						break;
 		default : return -1;
 	}
 	wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmd, addr, count, NULL);
@@ -1228,6 +1219,185 @@ int communicate_SuperSwitch3_STS(int fd, unsigned char *buff, int index)
 		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
 		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
 	}
+
+    return 0;
+}
+
+
+int communicate_iljin_alts(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024];
+    int regAddr[]={1000, 1500},
+        cmdCode[]={0x04, 0x04},
+        wordCnt[]={30, 4};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> ILJIN_ALTS eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+	    usleep(100000);
+
+    }
+
+    return 0;
+}
+
+
+int communicate_pac100(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024];
+    int cmdCode[]={0x04, 0x04, 0x04, 0x04, 0x04},
+		regAddr[]={1000, 1021, 1050, 1065, 1134},
+		wordCnt[]={14,   6,    4,    2,   1};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> PAC100 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
+
+
+int communicate_accura3700(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024];
+    int cmdCode[]={0x03,  0x03,  0x03},
+		regAddr[]={11100, 11412, 12208 },
+		wordCnt[]={70,    2,     4};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> PAC100 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
+
+
+int communicate_accura2300s(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024];
+    int cmdCode[]={0x03,  0x03},
+		regAddr[]={11100, 11200},
+		wordCnt[]={60,    90};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> PAC100 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
+
+
+int communicate_gdr(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024];
+    int regAddr[]={1000, 1100},
+        cmdCode[]={0x04, 0x04},
+        wordCnt[]={1,    2};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> PAC100 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
+
+int communicate_exp40_ttf_dc(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[512];
+	int cmdCode[]={0x03, 0x02},
+		regAddr[]={0, 0},
+		wordCnt[]={11, 13};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(WARNING, "SERVER -> EXP40_TTF_DC eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0) { return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
 
     return 0;
 }

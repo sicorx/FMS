@@ -57,6 +57,8 @@ int communicate_rtu_mpm330a(int fd, unsigned char *buff, int index);
 int communicate_rtu_gimaci(int fd, unsigned char *buff, int index);
 int communicate_rtu_gimaciiplus(int fd, unsigned char *buff, int index);
 int communicate_rtu_gipam115fi(int fd, unsigned char *buff, int index);
+int communicate_accura3700(int fd, unsigned char *buff, int index);
+int communicate_accura2300s(int fd, unsigned char *buff, int index);
 ////////////////////////////분전반////////////////////////////
 
 
@@ -79,16 +81,12 @@ int communication_innotube(int fd, unsigned char *buff, int index);
 
 
 /////////////////////////////접점////////////////////////////////
-int communicate_km6053(int fd, unsigned char *buff, int index);
 int communicate_rm6054(int fd, unsigned char *buff, int index);
 int communicate_rtu_rtu5000(int fd, unsigned char *buff, int index);
 /////////////////////////////접점////////////////////////////////
 
 
 
-/////////////////////////////계전기////////////////////////////////
-int communicate_cimon(int fd, unsigned char *buff, int index);
-/////////////////////////////계전기////////////////////////////////
 
 
 
@@ -103,4 +101,24 @@ int communication_rtu_ttdm128(int fd, unsigned char *buff, int index);
 /////////////////////////////BMS////////////////////////////////
 int communicate_btech(int fd, unsigned char *buff, int index);
 /////////////////////////////BMS////////////////////////////////
+
+
+/////////////////////////////ALTS////////////////////////////////
+int communicate_iljin_alts(int fd, unsigned char *buff, int index);
+/////////////////////////////ALTS////////////////////////////////
+
+
+/////////////////////////////수배전반////////////////////////////////
+int communicate_pac100(int fd, unsigned char *buff, int index);
+/////////////////////////////수배전반////////////////////////////////
+
+
+/////////////////////////////계전기////////////////////////////////
+int communicate_cimon(int fd, unsigned char *buff, int index);
+int communicate_gdr(int fd, unsigned char *buff, int index);
+/////////////////////////////계전기////////////////////////////////
+
+/////////////////////////////지열////////////////////////////////
+int communicate_exp40_ttf_dc(int fd, unsigned char *buff, int index);
+/////////////////////////////지열////////////////////////////////
 #endif /* _MODEL_H_ */

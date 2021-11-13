@@ -42,6 +42,8 @@
 #define RTU_DPM_GiMACi			0x032B	//811 
 #define RTU_DPM_GiMACIIPlus		0x032C	//812 
 #define RTU_DPM_GiPAM115FI		0x032D	//813 
+#define DPM_ACCURA3700			0x032E	//814 
+#define DPM_ACCURA2300S			0x032F	//815 
 /* MODEL DEFINE */
 
 

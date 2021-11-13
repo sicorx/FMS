@@ -431,6 +431,12 @@ int read_modbus_rtu_frame_timeout(int index, int fd, unsigned char *rxbuff, time
 		return -1;
 	}
 
+	if(readn_timeout(fd, (char *)rxbuff+5, rxbuff[2], 1) != rxbuff[2])
+	{
+		fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS Response Packet Body Recv Fail..\n", __FUNCTION__, __LINE__);
+		return -1;
+	}
+
 	if(rxbuff[1] & 0x80)
 	{
 		modbus_exception(rxbuff[2]);
@@ -458,12 +464,6 @@ int read_modbus_rtu_frame_timeout(int index, int fd, unsigned char *rxbuff, time
 		}
 	}
 
-	if(readn_timeout(fd, (char *)rxbuff+5, rxbuff[2], 1) != rxbuff[2])
-	{
-		fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS Response Packet Body Recv Fail..\n", __FUNCTION__, __LINE__);
-		return -1;
-	}
-
 	crc16 = modbus_crc16(rxbuff, rxbuff[2]+3);
 	if(rxbuff[rxbuff[2]+3] != ((crc16 & 0xFF00) >> 8) || rxbuff[rxbuff[2]+4] !=  (crc16 & 0x00FF))
 	{
@@ -479,32 +479,40 @@ int read_modbus_rtu_frame_timeout(int index, int fd, unsigned char *rxbuff, time
 
 int read_modbus_tcp_frame_timeout(int index, int fd, unsigned char *rxbuff, time_t interval, int req_word_cnt)
 {
-    int ret=0, rbytes=0;
+    int ret=0, rbytes=0, tmp=0;
     struct equip_conn_info *pConnInfo = conn_info[index];
 
     do {
-		//아이디 체크
-		if(pConnInfo->id != (unsigned int)rxbuff[6])
-		{
-			fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS TCP Response Frame Device Id Error: Req[%02X] Res[%02X]\n", __FUNCTION__, __LINE__, pConnInfo->eseq, pConnInfo->id, rxbuff[0]);
-			ret = -1;
-			break;
-		}
-
-        if(readn_timeout(fd, (char *)rxbuff, 6, interval) != 6)
+		tmp = readn_timeout(fd, (char *)rxbuff, 6, interval);
+        if(tmp != 6)
         {
-            fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS TCP Respoonse Packet Header Recv Fail..\n", __FUNCTION__, __LINE__, pConnInfo->eseq);
+            fileLog(WARNING, "[%s:%d] eseq=[%d] tmp=[%d] MODBUS TCP Response Packet Header Recv Fail..\n", __FUNCTION__, __LINE__, pConnInfo->eseq, tmp);
             ret = -1;
             break;
         }
 
         rbytes = (rxbuff[4] << 8) | rxbuff[5];
-
-        if(readn_timeout(fd, (char *)rxbuff+6, rbytes, interval) != rbytes)
+		tmp = readn_timeout(fd, (char *)rxbuff+6, rbytes, interval);
+        if(tmp != rbytes)
         {
-            fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS TCP Respoonse Packet Body Recv Fail..\n", __FUNCTION__, __LINE__, pConnInfo->eseq);
+            fileLog(WARNING, "[%s:%d] eseq=[%d] tmp=[%d] rbytes=[%d] MODBUS TCP Respoonse Packet Body Recv Fail..\n", __FUNCTION__, __LINE__, pConnInfo->eseq, tmp, rbytes);
             ret = -1;
+			break;
         }
+
+		//아이디 체크
+		if(pConnInfo->id != (unsigned int)rxbuff[6])
+		{
+			fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS TCP Response Frame Device Id Error: Req[%02X] Res[%02X]\n", __FUNCTION__, __LINE__, pConnInfo->eseq, pConnInfo->id, rxbuff[6]);
+			ret = -1;
+			break;
+		}
+
+		if(rxbuff[7] & 0x80)
+		{
+			modbus_exception(rxbuff[8]);
+			return -1;
+		}
 
 		if(rxbuff[7] == 0x03 || rxbuff[7] == 0x04)
         {

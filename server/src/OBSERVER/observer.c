@@ -420,6 +420,8 @@ void *equip_Thread_Ethernet(void *arg)
 				case RTU_DPM_GiMACIIPlus	: communicate_func = communicate_rtu_gimaciiplus;		break;
 				case RTU_DPM_GiPAM115FI		: communicate_func = communicate_rtu_gipam115fi;		break;
 
+				case DPM_ACCURA3700			: communicate_func = communicate_accura3700;			break;
+				case DPM_ACCURA2300S		: communicate_func = communicate_accura2300s;			break;
 				//추후 추가 예정
 				//case DPM_GiPAM2000FIM		: communicate_func = communicate_GiPAM2KFIM;			break;
 				//case DPM_IMPRO				: communicate_func = communicate_impro;					break;
@@ -467,14 +469,26 @@ void *equip_Thread_Ethernet(void *arg)
 				case RTU_TH6				:
 				case RTU_TH7				:
 				case RTU_TH8				: communicate_func = communication_rtu_th;				break;
+				case P_300C					: communicate_func = communicate_modbus;				break;
+				case SP_INC					: communicate_func = communicate_modbus;				break;
 				//온습도 끝
 				
 				//접점 시작
-				case KM6053					: communicate_func = communicate_km6053;				break;
+				case KM6053					: communicate_func = communicate_modbus;				break;
 				case RM6054					: communicate_func = communicate_rm6054;				break;
 				case RTU_RTU5000			: communicate_func = communicate_rtu_rtu5000;			break;
 				//접점 끝
 				
+				//수배전반 시작
+				case PAC100					: communicate_func = communicate_pac100;				break;
+				case HIMAP_FI				: communicate_func = communicate_modbus;				break;
+				case HIMAP_T				: communicate_func = communicate_modbus;				break;
+				//수배전반 끝
+
+				//OCGR 시작
+				case GDR					: communicate_func = communicate_gdr;					break;
+				//OCGR 끝
+
 				//계전기 시작
 				case CIMON					: communicate_func = communicate_cimon;					break;
 				//계전기 끝
@@ -491,14 +505,22 @@ void *equip_Thread_Ethernet(void *arg)
 				//case TTDM128_RECV		: communicate_func = communicate_ttdm128_recv;			break;
 				case A_LLM1				: communicate_func = communicate_a_llm1;				break;
 				case RTU_TTDM128		: communicate_func = communication_rtu_ttdm128;			break;
+				case LBSM200			: communicate_func = communicate_modbus;				break;
 				//누수 거리형 끝
 
 
 
 				//BMS 시작
-				case BTECH					: communicate_func = communicate_btech;					break;
+				case BTECH				: communicate_func = communicate_btech;					break;
 				//BMS 끝
 
+				//ALTS 시작
+				case ILJIN_ALTS			: communicate_func = communicate_iljin_alts;				break;
+				//ALTS 끝
+
+				//지열 시작
+				case EXP40_TTF_DC		: communicate_func = communicate_exp40_ttf_dc;				break;
+				//지열 끝
 
 				default				:
 					fileLog(CRITICAL, "[%s:%d] Undefined Model Type.. EQUIP_SEQ=[%d],model_seq=[%d]\n", __FUNCTION__, __LINE__, conn_info[equip_idx]->eseq, conn_info[equip_idx]->model_seq);

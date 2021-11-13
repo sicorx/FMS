@@ -27,7 +27,7 @@ CFLAGS += -D_REENTRANT
 #TEST 모드 
 #사용시 장비 하나만 사용 define.h에서 장비 시퀀스 변경
 #미사용시 정상 작동
-#CFLAGS += -D_TEST
+CFLAGS += -D_TEST
 
 #DEBUG 모드
 #사용시 정상 로그 찍음

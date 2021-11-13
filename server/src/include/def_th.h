@@ -14,6 +14,8 @@
 #define RTU_TH6				0x050A
 #define RTU_TH7				0x050B
 #define RTU_TH8				0x050C
+#define P_300C				0x050D	/* 광주 오토에버 분전반(RST)온도 3개짜리 */
+#define SP_INC				0x050E
 
 #define MES100_START_ADDR	0
 #define MES_100_REQ_SIZE	2
