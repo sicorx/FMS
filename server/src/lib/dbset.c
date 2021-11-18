@@ -1126,6 +1126,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i==38) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[84], p[85]) / 10.;	// 전류 최대값 3(A)
 				else if(i==39) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[86], p[87]);		// 전력 최대값(W)
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
 			case DPM_ACCURA3700 :
 				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  3], p[  2], p[  1], p[  0]);	// Voltage LN A
 				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  7], p[  6], p[  5], p[  4]);	// Voltage LN B
@@ -1143,7 +1144,35 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[143], p[142], p[141], p[140]);	// Frequency
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 
-			case DPM_ACCURA2300S :
+			case DPM_ACCURA2300S_3P1 :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  3], p[  2], p[  1], p[  0]);	// Voltage LN A
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  7], p[  6], p[  5], p[  4]);	// Voltage LN B
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 11], p[ 10], p[  9], p[  8]);	// Voltage LN C
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 19], p[ 18], p[ 17], p[ 16]);	// Voltage LL AB
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 23], p[ 22], p[ 21], p[ 20]);	// Voltage LL BC
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 27], p[ 26], p[ 25], p[ 24]);	// Voltage LL CA
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[103], p[102], p[101], p[100]);	// Frequency
+				
+				/* 데이터 길이 60 일때
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[123], p[122], p[121], p[120]);	// Current A
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[127], p[126], p[125], p[124]);	// Current B
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[131], p[130], p[129], p[128]);	// Current C
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[255], p[254], p[253], p[252]);	// Active Power Ptot
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[292], p[293], p[294], p[295]);	// KWh received
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[296], p[297], p[298], p[299]);	// KWh delivered
+				*/
+
+				// 데이터 길이 100 일때
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[203], p[202], p[201], p[200]);	// Current A
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[207], p[206], p[205], p[204]);	// Current B
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[211], p[210], p[209], p[208]);	// Current C
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[335], p[334], p[333], p[332]);	// Active Power Ptot
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[372], p[373], p[374], p[375]);	// KWh received
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[376], p[377], p[378], p[379]);	// KWh delivered
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			case DPM_ACCURA2300S_3P41 :
+				k = ((i-7)/6) * 300 + 200;
 				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  3], p[  2], p[  1], p[  0]);	// Voltage LN A
 				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  7], p[  6], p[  5], p[  4]);	// Voltage LN B
 				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 11], p[ 10], p[  9], p[  8]);	// Voltage LN C
@@ -1152,12 +1181,59 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 27], p[ 26], p[ 25], p[ 24]);	// Voltage LL CA
 				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[103], p[102], p[101], p[100]);	// Frequency
 
-				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[123], p[122], p[121], p[120]);	// Current A
-				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[127], p[126], p[125], p[124]);	// Current B
-				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[131], p[130], p[129], p[128]);	// Current C
-				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[255], p[254], p[253], p[252]);	// Active Power Ptot
-				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[292], p[293], p[294], p[295]);	// KWh received
-				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[296], p[297], p[298], p[299]);	// KWh delivered
+				else if((i % 6)==1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+  3], p[k+  2], p[k+  1], p[k+  0]);	// Current A
+				else if((i % 6)==2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+  7], p[k+  6], p[k+  5], p[k+  4]);	// Current B
+				else if((i % 6)==3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+ 11], p[k+ 10], p[k+  9], p[k+  8]);	// Current C
+				else if((i % 6)==4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+135], p[k+134], p[k+133], p[k+132]);	// Active Power Ptot
+				else if((i % 6)==5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[k+172], p[k+173], p[k+174], p[k+175]);	// KWh received
+				else if((i % 6)==0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[k+176], p[k+177], p[k+178], p[k+179]);	// KWh delivered
+
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+				
+			case DPM_ACCURA2300S_3P3_1P3F18 :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  3], p[  2], p[  1], p[  0]);	// Voltage LN A
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[  7], p[  6], p[  5], p[  4]);	// Voltage LN B
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 11], p[ 10], p[  9], p[  8]);	// Voltage LN C
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 19], p[ 18], p[ 17], p[ 16]);	// Voltage LL AB
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 23], p[ 22], p[ 21], p[ 20]);	// Voltage LL BC
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 27], p[ 26], p[ 25], p[ 24]);	// Voltage LL CA
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[103], p[102], p[101], p[100]);	// Frequency
+				else if(i < 25)
+				{
+					k = ((i-7)/6) * 300 + 200;
+						 if((i % 6)==1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+  3], p[k+  2], p[k+  1], p[k+  0]);	// Current A
+					else if((i % 6)==2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+  7], p[k+  6], p[k+  5], p[k+  4]);	// Current B
+					else if((i % 6)==3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+ 11], p[k+ 10], p[k+  9], p[k+  8]);	// Current C
+					else if((i % 6)==4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+135], p[k+134], p[k+133], p[k+132]);	// Active Power Ptot
+					else if((i % 6)==5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[k+172], p[k+173], p[k+174], p[k+175]);	// KWh received
+					else if((i % 6)==0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[k+176], p[k+177], p[k+178], p[k+179]);	// KWh delivered
+				}
+				else if(i < 241)
+				{
+					k = (((i-1) / 4) + 5) * 100;
+						 if((i % 4) == 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+ 3], p[k+ 2], p[k+ 1], p[k+ 0]);	// R Current I
+					else if((i % 4) == 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[k+35], p[k+34], p[k+33], p[k+32]);	// R Active Power P
+					else if((i % 4) == 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[k+48], p[k+49], p[k+50], p[k+51]);	// R Receiived kWH
+					else if((i % 4) == 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[k+52], p[k+53], p[k+54], p[k+55]);	// R Delivered kWH
+				}
+
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			case DPM_ACCURA3300E :
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 29], p[ 28], p[ 27], p[ 26]);	// Voltage A
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 33], p[ 32], p[ 31], p[ 30]);	// Voltage B
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 37], p[ 36], p[ 35], p[ 34]);	// Voltage C
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 45], p[ 44], p[ 43], p[ 42]);	// Current A
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 49], p[ 48], p[ 47], p[ 46]);	// Current B
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 53], p[ 52], p[ 51], p[ 50]);	// Current C
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 61], p[ 60], p[ 59], p[ 58]);	// Voltage AB
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 65], p[ 64], p[ 63], p[ 62]);	// Voltage BC
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 69], p[ 68], p[ 67], p[ 66]);	// Voltage CA
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 89], p[ 88], p[ 87], p[ 86]);	// KW total
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[137], p[136], p[135], p[134]);	// Power factor total
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[149], p[148], p[147], p[146]);	// KWh received
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value4  (p[153], p[152], p[151], p[150]);	// KWh delivered
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 			//분전반 끝
 			

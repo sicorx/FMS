@@ -58,7 +58,10 @@ int communicate_rtu_gimaci(int fd, unsigned char *buff, int index);
 int communicate_rtu_gimaciiplus(int fd, unsigned char *buff, int index);
 int communicate_rtu_gipam115fi(int fd, unsigned char *buff, int index);
 int communicate_accura3700(int fd, unsigned char *buff, int index);
-int communicate_accura2300s(int fd, unsigned char *buff, int index);
+int communicate_accura2300s_3p1(int fd, unsigned char *buff, int index);
+int communicate_accura2300s_3p41(int fd, unsigned char *buff, int index);
+int communicate_accura2300s_3p3_1p3f18(int fd, unsigned char *buff, int index);
+int communicate_accura3300e(int fd, unsigned char *buff, int index);
 ////////////////////////////ºÐÀü¹Ý////////////////////////////
 
 

@@ -344,84 +344,87 @@ void *equip_Thread_Ethernet(void *arg)
 			switch(pConnInfo->model_seq)
 			{
 				//UPS 시작
-				case UPS_HIPULSE_U			: communicate_func = communicate_HipulseU;				break;				
+				case UPS_HIPULSE_U				: communicate_func = communicate_HipulseU;					break;				
 				
 				//항온항습기 시작
-				case MST					: communicate_func = communicate_mst;					break;
+				case MST						: communicate_func = communicate_mst;						break;
 
-				case NEMO					: 
-				case NEMO_ECU				: communicate_func = communicate_nemo;					break;
+				case NEMO						: 
+				case NEMO_ECU					: communicate_func = communicate_nemo;						break;
 
-				case AR						:
-				case AR_HP8KB				:
-				case AR_36BYTE				: communicate_func = communicate_ar;					break;	
+				case AR							:
+				case AR_HP8KB					:
+				case AR_36BYTE					: communicate_func = communicate_ar;						break;	
 				
-				case AR_OLD					:
-				case AR_SPHCEX				:
-				case SYSTRONIC_P			:
-				case AR_HANP08				:
-				case AR_HP8EPQ				:
-				case AR_HP8EPF				:
-				case SYSTRONIC_I			:
-				case AR_HANE08				:
-				case AR_STHCE				:
-				case AR_HANE09				:
-				case AR_SSHP8Y1				:
-				case AR_HANE09_EXOR			: communicate_func = communicate_ar_old;				break;
-				case AR_MODBUS				: communicate_func = communicate_ar_modbus;				break;				
-				case SVU					: communicate_func = communicate_svu;					break;					
-				case DDC_SHINSUNG			: communicate_func = communicate_ddc_shinsung;			break;
-				case DDC_HANGUL				: communicate_func = communicate_ddc_hangul;			break;
-				case DDC_HANGUL2			: communicate_func = communicate_ddc_hangul2;			break;
-				case FAC1000				: communicate_func = communicate_fac1000;				break;
+				case AR_OLD						:
+				case AR_SPHCEX					:
+				case SYSTRONIC_P				:
+				case AR_HANP08					:
+				case AR_HP8EPQ					:
+				case AR_HP8EPF					:
+				case SYSTRONIC_I				:
+				case AR_HANE08					:
+				case AR_STHCE					:
+				case AR_HANE09					:
+				case AR_SSHP8Y1					:
+				case AR_HANE09_EXOR				: communicate_func = communicate_ar_old;					break;
+				case AR_MODBUS					: communicate_func = communicate_ar_modbus;					break;				
+				case SVU						: communicate_func = communicate_svu;						break;					
+				case DDC_SHINSUNG				: communicate_func = communicate_ddc_shinsung;				break;
+				case DDC_HANGUL					: communicate_func = communicate_ddc_hangul;				break;
+				case DDC_HANGUL2				: communicate_func = communicate_ddc_hangul2;				break;
+				case FAC1000					: communicate_func = communicate_fac1000;					break;
 
-				case SEUNGIL				:
-				case SEUNGIL_MLTM			: communicate_func = communicate_seungil;				break;
-				case SYSKOREA				: communicate_func = communicate_syskorea;				break;
-				case BY_CRC2004				: communicate_func = communicate_by_crc2004;			break;
-				case DY_SS2000				: communicate_func = communicate_dy_ss2000;				break;
-				case LIEBERT_CHTP			: communicate_func = communicate_liebert_chtp;			break;
-				case AR_HANE09_DYRCU		: communicate_func = communicate_ar_dyrcu;				break;
-				case AR_MODBUS_DYRCU		: communicate_func = communicate_ar_modbus_dyrcu;		break;
-				case AR_HANE09_Q			: communicate_func = communicate_ar_question;			break;
-				case DX100					: communicate_func = communicate_dx100;					break;
-				case MeX100					: communicate_func = communicate_mex100;				break;
+				case SEUNGIL					:
+				case SEUNGIL_MLTM				: communicate_func = communicate_seungil;					break;
+				case SYSKOREA					: communicate_func = communicate_syskorea;					break;
+				case BY_CRC2004					: communicate_func = communicate_by_crc2004;				break;
+				case DY_SS2000					: communicate_func = communicate_dy_ss2000;					break;
+				case LIEBERT_CHTP				: communicate_func = communicate_liebert_chtp;				break;
+				case AR_HANE09_DYRCU			: communicate_func = communicate_ar_dyrcu;					break;
+				case AR_MODBUS_DYRCU			: communicate_func = communicate_ar_modbus_dyrcu;			break;
+				case AR_HANE09_Q				: communicate_func = communicate_ar_question;				break;
+				case DX100						: communicate_func = communicate_dx100;						break;
+				case MeX100						: communicate_func = communicate_mex100;					break;
 
-				case MST_ASCII				:
-				case MST_HMM21				:
-				case MST_COOLER				: communicate_func = communicate_mst_hmm21;				break;
-				case OC485					: communicate_func = communicate_oc485;					break;
-				case SEUNGIL_STHC_MB_FW36	: communicate_func = communicate_seungil_sthc_mb_fw36;	break;
-				case SOLID					: communicate_func = communicate_solid;					break;
-				case STHAV_MB_R1			: communicate_func = communicate_sthav_mb_r1;			break;
+				case MST_ASCII					:
+				case MST_HMM21					:
+				case MST_COOLER					: communicate_func = communicate_mst_hmm21;					break;
+				case OC485						: communicate_func = communicate_oc485;						break;
+				case SEUNGIL_STHC_MB_FW36		: communicate_func = communicate_seungil_sthc_mb_fw36;		break;
+				case SOLID						: communicate_func = communicate_solid;						break;
+				case STHAV_MB_R1				: communicate_func = communicate_sthav_mb_r1;				break;
 
-				case RTU_AR_MODBUS			: communicate_func = communicate_rtu_ar_modbus;			break;
-				case RTU_LIEBERT_CHTP		: communicate_func = communicate_rtu_liebert_chtp;		break;
-				case RTU_OC485				: communicate_func = communicate_rtu_oc485;				break;
-				case RTU_AR_HANE09			: communicate_func = communicate_rtu_ar_hane09;			break;
-				case RTU_AR_HANE09_Q		: communicate_func = communicate_rtu_ar_hane09_q;		break;
+				case RTU_AR_MODBUS				: communicate_func = communicate_rtu_ar_modbus;				break;
+				case RTU_LIEBERT_CHTP			: communicate_func = communicate_rtu_liebert_chtp;			break;
+				case RTU_OC485					: communicate_func = communicate_rtu_oc485;					break;
+				case RTU_AR_HANE09				: communicate_func = communicate_rtu_ar_hane09;				break;
+				case RTU_AR_HANE09_Q			: communicate_func = communicate_rtu_ar_hane09_q;			break;
 				//항온항습기 끝 air
 				
 				//분전반 시작 dpm
-				case DPM_MPM330				: communicate_func = communicate_mpm330;				break;
+				case DPM_MPM330					: communicate_func = communicate_mpm330;					break;
 
-				case DPM_MPM330A			:
-				case DPM_MPM330A_TR			:
-				case DPM_MPM330A_PMS		: communicate_func = communicate_mpm330a;				break;
+				case DPM_MPM330A				:
+				case DPM_MPM330A_TR				:
+				case DPM_MPM330A_PMS			: communicate_func = communicate_mpm330a;					break;
 				
-				case DPM_KDY_200			:
-				case DPM_GiMACi				:
-				case DPM_GiMACIIPlus		:
-				case DPM_GiPAM115FI			:
-				case DPM_GiMACi_SG1040		: communicate_func = communicate_modbus;				break;
+				case DPM_KDY_200				:
+				case DPM_GiMACi					:
+				case DPM_GiMACIIPlus			:
+				case DPM_GiPAM115FI				:
+				case DPM_GiMACi_SG1040			: communicate_func = communicate_modbus;					break;
 
-				case RTU_MPM330A			: communicate_func = communicate_rtu_mpm330a;			break;				
-				case RTU_DPM_GiMACi			: communicate_func = communicate_rtu_gimaci;			break;
-				case RTU_DPM_GiMACIIPlus	: communicate_func = communicate_rtu_gimaciiplus;		break;
-				case RTU_DPM_GiPAM115FI		: communicate_func = communicate_rtu_gipam115fi;		break;
+				case RTU_MPM330A				: communicate_func = communicate_rtu_mpm330a;				break;				
+				case RTU_DPM_GiMACi				: communicate_func = communicate_rtu_gimaci;				break;
+				case RTU_DPM_GiMACIIPlus		: communicate_func = communicate_rtu_gimaciiplus;			break;
+				case RTU_DPM_GiPAM115FI			: communicate_func = communicate_rtu_gipam115fi;			break;
 
-				case DPM_ACCURA3700			: communicate_func = communicate_accura3700;			break;
-				case DPM_ACCURA2300S		: communicate_func = communicate_accura2300s;			break;
+				case DPM_ACCURA3700				: communicate_func = communicate_accura3700;				break;
+				case DPM_ACCURA2300S_3P1		: communicate_func = communicate_accura2300s_3p1;			break;
+				case DPM_ACCURA2300S_3P41		: communicate_func = communicate_accura2300s_3p41;			break;
+				case DPM_ACCURA2300S_3P3_1P3F18	: communicate_func = communicate_accura2300s_3p3_1p3f18;	break;
+				case DPM_ACCURA3300E			: communicate_func = communicate_accura3300e;				break;
 				//추후 추가 예정
 				//case DPM_GiPAM2000FIM		: communicate_func = communicate_GiPAM2KFIM;			break;
 				//case DPM_IMPRO				: communicate_func = communicate_impro;					break;

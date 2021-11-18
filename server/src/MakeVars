@@ -19,7 +19,7 @@ CFLAGS += -funroll-loops
 CFLAGS += -std=c99
 
 #CFLAGS += -march=i686
-CFLAGS += -march=native
+#CFLAGS += -march=native
 
 CFLAGS += -D_GNU_SOURCE
 CFLAGS += -D_REENTRANT

@@ -1314,7 +1314,7 @@ int communicate_accura3700(int fd, unsigned char *buff, int index)
 }
 
 
-int communicate_accura2300s(int fd, unsigned char *buff, int index)
+int communicate_accura2300s_3p1(int fd, unsigned char *buff, int index)
 {
     int i=0, prev_idx=0;
 
@@ -1322,7 +1322,7 @@ int communicate_accura2300s(int fd, unsigned char *buff, int index)
     unsigned char rxtmp[1024];
     int cmdCode[]={0x03,  0x03},
 		regAddr[]={11100, 11200},
-		wordCnt[]={60,    90};
+		wordCnt[]={100,   100};
     struct equip_conn_info *pConnInfo = conn_info[index];
 
     usleep(100000);
@@ -1331,7 +1331,7 @@ int communicate_accura2300s(int fd, unsigned char *buff, int index)
     {
         memset(rxtmp, 0x00, sizeof(rxtmp));
         wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
-        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> PAC100 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> ACCURA2300S_3P1 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
 
         memset(rxtmp, 0x00, sizeof(rxtmp));
 		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
@@ -1343,6 +1343,97 @@ int communicate_accura2300s(int fd, unsigned char *buff, int index)
     return 0;
 }
 
+int communicate_accura2300s_3p41(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024*16];
+    int regAddr[]={11100, 
+					11200, 11300, 11400, 11500, 11600, 11700, 11800, 11900, 12000, 12100, 12200, 12300, 12400, 12500, 12600, // #00 ~ #09
+					12700, 12800, 12900, 13000, 13100, 13200, 13300, 13400, 13500, 13600, 13700, 13800, 13900, 14000, 14100, // #10 ~ #19
+					14200, 14300, 14400, 14500, 14600, 14700, 14800, 14900, 15000, 15100, 15200, 15300, 15400, 15500, 15600, // #20 ~ #29
+					15700, 15800, 15900, 16000, 16100, 16200, 16300, 16400, 16500, 16600, 16700, 16800, 16900, 17000, 17100, // #30 ~ #39
+					17200, 17300}; // #40
+
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, 0x03, regAddr[i], 100, NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> ACCURA2300S_3P41 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, 100) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
+
+int communicate_accura2300s_3p3_1p3f18(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024*8];
+    int regAddr[]={11100, 
+					11200, 11300, 11400, 11500, 11600, 11700, 11800, 11900, 12000, 12100, 12200, 12300, 12400, 12500, 12600, // #00 ~ #09
+					12700, 12800, 12900, 13000, 13100, 13200, 13300, 13400, 13500, 13600, 13700, 13800, 13900, 14000, 14100, // #10 ~ #19
+					14200, 14300}; // #20
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, 0x03, regAddr[i], 100, NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> ACCURA2300S_3P3_1P3F18 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, 100) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
+
+int communicate_accura3300e(int fd, unsigned char *buff, int index)
+{
+    int i=0, prev_idx=0;
+
+    int wbytes=0;
+    unsigned char rxtmp[1024];
+    int cmdCode[]={0x03,  0x03},
+		regAddr[]={11000, 11100},
+		wordCnt[]={100,   100};
+    struct equip_conn_info *pConnInfo = conn_info[index];
+
+    usleep(100000);
+
+    for(i=0; i<(int)sizeof(regAddr)/(int)sizeof(int); i++)
+    {
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+        wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], regAddr[i], wordCnt[i], NULL);
+        if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(CRITICAL, "Server -> ACCURA3300E eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
+
+        memset(rxtmp, 0x00, sizeof(rxtmp));
+		if(read_modbus_frame_timeout(index, fd, rxtmp, 2, wordCnt[i]) != 0)	{ return -1; }
+
+		if(pConnInfo->header == HEADER_UNKNOWN_TYPE)	{ memcpy(buff+prev_idx, rxtmp+3, rxtmp[2]); prev_idx += rxtmp[2]; }
+		else if(pConnInfo->header == HEADER_MODBUS_TCP)	{ memcpy(buff+prev_idx, &rxtmp[9], rxtmp[8]); prev_idx += rxtmp[8]; }
+    }
+
+    return 0;
+}
 
 int communicate_gdr(int fd, unsigned char *buff, int index)
 {
