@@ -20,6 +20,11 @@ void mutex_init_once_eth_dev(void);
 void print_config(void);
 void load_equip_config(void);
 int process_main(void);
+
+void *threashold_Server(void * arg);
+void *threashold_Client(void *arg);
+int find_index(unsigned short equip_seq);
+
 void *equip_Thread_Ethernet(void *arg);
 void *equip_Thread_SNMP(void *arg);
 
@@ -67,6 +72,18 @@ void mutex_init_once(void)
         initialize_oid(i);
     }
 	
+}
+
+int find_index(unsigned short equip_seq)
+{
+	int i=0;
+
+	for(i=0; i<equip_count; i++)
+	{
+		if(conn_info[i]->eseq == equip_seq)	return i;
+	}
+
+	return -1;
 }
 
 void mutex_init_once_eth_dev(void)
@@ -262,9 +279,142 @@ int process_main(void)
 		}
 	}
 
+
+	err_status = pthread_create(&t_id, &t_attr, threashold_Server, NULL);
+	if(0 != err_status)
+	{
+		fileLog(WARNING, "Threashold Server pThread Create Fail: %s\n", (char *)strerror_r(err_status, err_buff, sizeof(err_buff)));
+	}
+
 	return 0;
 
 }
+
+void *threashold_Server(void * arg)
+{
+#ifdef DEBUG
+	fileLog(INFO, "[%s:%d] Thread Start \n", __FUNCTION__, __LINE__);
+#endif
+    int server_sockfd, client_sockfd, *pclient_sockfd, err_status;
+    struct sockaddr client_addr;
+    socklen_t client_len;
+    pthread_t t_id;
+    pthread_attr_t t_attr;
+
+    char err_buff[256] = {0x00, };
+    pthread_attr_init(&t_attr);
+    pthread_attr_setdetachstate(&t_attr, PTHREAD_CREATE_DETACHED);
+
+    if((server_sockfd = makeServer(THRESHOLD_SERVER_PORT)) == -1)
+        fileLog(CRITICAL, "Create threashold Server Listen Port Fail THRESHOLD_SERVER_PORT=[%d]\n", THRESHOLD_SERVER_PORT);
+
+    while(1)
+    {
+        client_len = sizeof(client_addr);
+        client_sockfd = accept(server_sockfd, (struct sockaddr *)&client_addr, &client_len);
+        if(client_sockfd == -1)
+        {
+            fileLog(WARNING, "Accept Fail.. %s\n", strerror(errno));
+            continue;
+        }
+#ifdef DEBUG
+        fileLog(INFO, "Accept OK.. Accept Socket Fd=[%d]\n", client_sockfd);
+#endif
+        pclient_sockfd  = (int *)malloc(sizeof(int));
+
+        *pclient_sockfd = client_sockfd;
+        err_status = pthread_create(&t_id, &t_attr, threashold_Client, (void *)pclient_sockfd);
+
+		if(0 != err_status)
+		{
+			fileLog(WARNING, "[%s:%d] Thread Create Fail: %s\n", __FUNCTION__, __LINE__, (char *)strerror_r(err_status, err_buff, sizeof(err_buff)));
+			close(client_sockfd);
+		}
+
+		
+        usleep(100);
+    }
+	return (void*)1;	//void return인데 리턴 안쓰면 warning 남 확인 필요
+
+}
+void *threashold_Client(void *arg)
+{
+    int fd=0, err_code=0, nfound=0;
+    unsigned char rxbuf[10];
+	unsigned char txbuf[16] = {0,};
+    struct timeval timeout;
+    fd_set rmask, mask;
+	int index = 0;
+	unsigned short equip_seq = 0;
+
+    fd = *((int *)arg);
+    free(arg);
+
+    while(1)
+    {
+        timeout.tv_sec  = 2L;
+        timeout.tv_usec = 0L;
+
+        FD_ZERO(&mask);
+        FD_SET (fd, &mask);
+
+        rmask = mask;
+        nfound = select(fd+1, &rmask, (fd_set *)0, (fd_set *)0, &timeout);
+
+        if(nfound == 0)
+        {
+            fileLog(WARNING, "No Request ... in %d sec\n", timeout.tv_sec);
+            break;
+        }
+
+        else if(nfound < 0)
+        {
+            fileLog(WARNING, "Interrupted System Call.. or On error.. \n");
+            break;
+        }
+
+        if(FD_ISSET(fd, &rmask))
+        {
+            if(readn(fd, (char *)rxbuf, 2) != 2)
+            {
+                fileLog(WARNING, "Read threashold Frame Fail..\n");
+                break;
+            }
+			equip_seq = get_short_value(rxbuf[0], rxbuf[1]);
+#ifdef DEBUG
+			fileLog(CRITICAL, "[%s:%d] EQUIP_SEQ=[%d]\n", __FUNCTION__, __LINE__, equip_seq);
+#endif
+
+			index = find_index(equip_seq);
+			
+			if(index != -1) 
+			{
+#ifdef DEBUG
+				fileLog(CRITICAL, "[%s:%d] index=[%d]\n", __FUNCTION__, __LINE__, index);
+#endif
+				load_ai_conf(index);
+				load_di_conf(index);
+				sprintf(txbuf, "%d", equip_seq);
+				writen(fd, (char *)txbuf, sizeof(txbuf));
+			}
+			else 
+			{
+				fileLog(CRITICAL, "[%s:%d] cant find index\n", __FUNCTION__, __LINE__);
+				writen(fd, (char *)txbuf, sizeof(txbuf));
+			}
+
+			break;
+
+        }
+    }
+#ifdef DEBUG
+    fileLog(INFO, "Threashold Thread End.. Socket FD(%d)\n", fd);
+#endif
+    FD_CLR(fd, &rmask);
+    close(fd);
+	return (void*)1;	//void return인데 리턴 안쓰면 warning 남 확인 필요
+}
+
 
 void *equip_Thread_Ethernet(void *arg)
 {
@@ -720,6 +870,7 @@ void *equip_Thread_SNMP(void *arg)
 
 	return NULL;
 }
+
 
 void get_conf(void)
 {
