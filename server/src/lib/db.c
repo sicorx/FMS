@@ -144,6 +144,71 @@ int get_equip_config(void)
 	return 1;
 }
 
+int reload_equip_config(int index, int eseq)
+{
+	MYSQL *conn;
+	MYSQL_RES *result;
+	MYSQL_ROW row;
+	char query[1024];
+
+	conn = mysql_init(NULL);
+
+	/* Connect to database */
+	if (!mysql_real_connect(conn, g_db_server, g_db_user, g_db_passwd, g_db_database, 0, NULL, CLIENT_MULTI_RESULTS))
+	{
+		fileLog(WARNING, "[%s:%d] MYSQL connection error : %s\n", __FUNCTION__, __LINE__, mysql_error(conn));
+		return -1;
+	}
+
+	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY FROM TB_EQUIP WHERE USE_YN='Y' AND EQUIP_SEQ=%d ", eseq);
+	#ifdef DEBUG
+	fileLog(INFO, "[%s:%d] %s\n", __FUNCTION__, __LINE__, query);
+	#endif
+
+	if(mysql_query(conn, query) != 0)
+	{
+		fileLog(WARNING, "[%s:%d] MYSQL query error : %s\n", __FUNCTION__, __LINE__, mysql_error(conn));
+		return -1;
+	}
+
+	do
+	{
+		result = mysql_store_result(conn);
+
+		while(result && (row = mysql_fetch_row(result)) != NULL)
+		{
+			if(row[0] != NULL) conn_info[index]->eseq = atoi(row[0]);
+			if(row[1] != NULL) conn_info[index]->header = atoi(row[1]);
+			if(row[2] != NULL) conn_info[index]->tail = atoi(row[2]);
+			if(row[3] != NULL) strcpy(conn_info[index]->ip, row[3]);
+			if(row[4] != NULL) conn_info[index]->port = atoi(row[4]);
+			if(row[5] != NULL) conn_info[index]->id = atoi(row[5]);
+
+			if(row[6] != NULL) conn_info[index]->ai_count = atoi(row[6]);
+			if(row[7] != NULL) conn_info[index]->di_count = atoi(row[7]);
+			if(row[8] != NULL) conn_info[index]->do_count = atoi(row[8]);
+			if(row[9] != NULL) conn_info[index]->net_err_count = atoi(row[9]);
+			if(row[10] != NULL) conn_info[index]->model_seq = atoi(row[10]);
+			if(row[11] != NULL) conn_info[index]->timeout = atoi(row[11]);
+			if(row[12] != NULL) conn_info[index]->ext_addr = atoi(row[12]);
+			if(row[13] != NULL) conn_info[index]->interface_type =	!strcasecmp(row[13], "ETHERNET") ? DEV_ETHERNET_TYPE :
+																!strcasecmp(row[13], "SERIAL") ? DEV_SERIAL_TYPE :
+																!strcasecmp(row[13], "SNMP") ? DEV_SNMP_TYPE : DEV_UNKNOWN_TYPE;
+			if(row[14] != NULL) strcpy(conn_info[index]->snmp_read_community, row[14]);
+		}
+
+		if(result)
+		{
+			mysql_free_result(result);
+		}
+
+	}while(mysql_next_result(conn) == 0);
+
+	mysql_close(conn);
+
+	return 1;
+}
+
 void load_ai_conf(int index)
 {
 	MYSQL *conn;

@@ -206,6 +206,23 @@ void print_config(void)
 	}
 }
 
+void reprint_config(int index)
+{
+	fileLog(INFO, "[%s:%d] eseq[%3d], it[%8s], header[%s], model_seq[%4d], tail[%s], ip[%15s], port[%5d], id[%2d], ai_count[%3d], di_count[%3d], do_count[%2d], "
+				  "net_err_count[%2d], timeout[%3d], ext_addr[%2d], READ_COMMUNITY[%s]\n", 
+	__FUNCTION__, __LINE__, 
+	conn_info[index]->eseq, 
+	conn_info[index]->interface_type == DEV_ETHERNET_TYPE ? STR_DEV_ETHERNET_TYPE : 
+	conn_info[index]->interface_type == DEV_SERIAL_TYPE ? STR_DEV_SERIAL_TYPE : 
+	conn_info[index]->interface_type == DEV_SNMP_TYPE ? STR_DEV_SNMP_TYPE : STR_DEV_UNKNOWN_TYPE,
+	conn_info[index]->header == HEADER_MODBUS_TCP ? STR_HEADER_MODBUS_TCP : STR_HEADER_UNKNOWN_TYPE,
+	conn_info[index]->model_seq,
+	conn_info[index]->tail == TAIL_MODBUS_CRC16 ? STR_TAIL_MODBUS_CRC16 : STR_TAIL_UNKNOWN_TYPE,
+	conn_info[index]->ip, conn_info[index]->port, conn_info[index]->id, 
+	conn_info[index]->ai_count, conn_info[index]->di_count, conn_info[index]->do_count, 
+	conn_info[index]->net_err_count, conn_info[index]->timeout, conn_info[index]->ext_addr, conn_info[index]->snmp_read_community);
+}
+
 void load_equip_config(void)
 {
 	int i;	
@@ -392,8 +409,11 @@ void *threashold_Client(void *arg)
 #ifdef DEBUG
 				fileLog(CRITICAL, "[%s:%d] index=[%d]\n", __FUNCTION__, __LINE__, index);
 #endif
+				reload_equip_config(index, equip_seq);
+				reprint_config(index);
 				load_ai_conf(index);
 				load_di_conf(index);
+
 				sprintf(txbuf, "%d", equip_seq);
 				writen(fd, (char *)txbuf, sizeof(txbuf));
 			}
