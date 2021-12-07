@@ -433,7 +433,7 @@ int read_modbus_rtu_frame_timeout(int index, int fd, unsigned char *rxbuff, time
 
 	if(readn_timeout(fd, (char *)rxbuff+5, rxbuff[2], 1) != rxbuff[2])
 	{
-		fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS Response Packet Body Recv Fail..\n", __FUNCTION__, __LINE__);
+		fileLog(WARNING, "[%s:%d] eseq=[%d] MODBUS Response Packet Body Recv Fail..\n", __FUNCTION__, __LINE__, pConnInfo->eseq);
 		return -1;
 	}
 

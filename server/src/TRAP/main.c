@@ -350,7 +350,7 @@ void alarm_insert(struct key_value p1, struct dbData d1)
 	if(p1.alarm == d1.trap_on)
 	{
 		fileLog(WARNING, "TRAP ON\n");
-		sprintf(query,  " INSERT INTO `FMS_LG`.`TB_ALARM_LOG` "
+		sprintf(query,  " INSERT INTO `TB_ALARM_LOG` "
 						" (EQUIP_SEQ, TAG_SEQ, ALARM_GRADE_CD, CURR_VALUE, TH_VALUE_LOW, TH_VALUE_HIGH, SMS_YN, SMS_SEND_YN, SMS_SEND_R_YN) "
 						" VALUES ('%d', '%d', 3, 0, 0, 0, 'Y', 'N', 'N'); ", d1.eseq, d1.tseq );
 	}

@@ -55,6 +55,8 @@
 #define RTU_OC485				0x0231	/* RTU OC485 */
 #define RTU_AR_HANE09			0x0232	/* RTU AR_HANE09 */
 #define RTU_AR_HANE09_Q			0x0233	/* RTU AR_HANE09_Q */
+#define DDC400					0x0234	/* 시스토로닉스 */
+#define DDC_UNKNOWN				0x0235	/* 시스토로닉스 LG(고객센터 사용) DDC버전 모름 */
 
 
 /* 서의(MST) 제어명령 타입 */

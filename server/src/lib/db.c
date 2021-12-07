@@ -86,12 +86,12 @@ int get_equip_config(void)
 	}
 
 #ifdef _TEST
-	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY FROM TB_EQUIP WHERE EQUIP_SEQ=%d; ", EQUIP_SEQ );
+	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY, READ_TERM, ALARM_YN, SMS_YN FROM TB_EQUIP WHERE EQUIP_SEQ=%d; ", EQUIP_SEQ );
 	#ifdef DEBUG
 	fileLog(INFO, "[%s:%d] %s\n", __FUNCTION__, __LINE__, query);
 	#endif
 #else
-	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY FROM TB_EQUIP WHERE USE_YN='Y' limit %d; ", MAX_SERVICE_COUNT);
+	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY, READ_TERM, ALARM_YN, SMS_YN FROM TB_EQUIP WHERE USE_YN='Y' limit %d; ", MAX_SERVICE_COUNT);
 	#ifdef DEBUG
 	fileLog(INFO, "[%s:%d] %s\n", __FUNCTION__, __LINE__, query);
 	#endif
@@ -127,8 +127,22 @@ int get_equip_config(void)
 																!strcasecmp(row[13], "SERIAL") ? DEV_SERIAL_TYPE :
 																!strcasecmp(row[13], "SNMP") ? DEV_SNMP_TYPE : DEV_UNKNOWN_TYPE;
 			if(row[14] != NULL) strcpy(conn_info[i]->snmp_read_community, row[14]);
+			if(row[15] != NULL) conn_info[i]->read_term = atoi(row[15]);
+			if(row[16] != NULL) 
+			{
+				if(!strncmp(row[16], "Y", 1))		conn_info[i]->alarm_yn = YES;
+				else if(!strncmp(row[16], "N", 1))	conn_info[i]->alarm_yn = NO;
+				else								conn_info[i]->alarm_yn = YES;
+			}
+			if(row[17] != NULL)
+			{
+				if(!strncmp(row[17], "Y", 1))		conn_info[i]->sms_yn = YES;
+				else if(!strncmp(row[17], "N", 1))	conn_info[i]->sms_yn = NO;
+				else								conn_info[i]->sms_yn = YES;
+			}
 
 			i++;
+			usleep(1);
 
 		}
 
@@ -160,7 +174,7 @@ int reload_equip_config(int index, int eseq)
 		return -1;
 	}
 
-	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY FROM TB_EQUIP WHERE USE_YN='Y' AND EQUIP_SEQ=%d ", eseq);
+	sprintf(query, " SELECT EQUIP_SEQ, HEADER, TAIL, EQUIP_GET_IP, EQUIP_GET_PORT, EQUIP_ID, AI_CNT, DI_CNT, DO_CNT, NET_ERR_CNT, MODEL_SEQ, TIMEOUT, EXT_ID, COMM_METHOD_CD, SNMP_READ_COMMUNITY, READ_TERM, ALARM_YN, SMS_YN FROM TB_EQUIP WHERE USE_YN='Y' AND EQUIP_SEQ=%d ", eseq);
 	#ifdef DEBUG
 	fileLog(INFO, "[%s:%d] %s\n", __FUNCTION__, __LINE__, query);
 	#endif
@@ -195,6 +209,19 @@ int reload_equip_config(int index, int eseq)
 																!strcasecmp(row[13], "SERIAL") ? DEV_SERIAL_TYPE :
 																!strcasecmp(row[13], "SNMP") ? DEV_SNMP_TYPE : DEV_UNKNOWN_TYPE;
 			if(row[14] != NULL) strcpy(conn_info[index]->snmp_read_community, row[14]);
+			if(row[15] != NULL) conn_info[index]->read_term = atoi(row[15]);
+			if(row[16] != NULL) 
+			{
+				if(!strncmp(row[16], "Y", 1))		conn_info[index]->alarm_yn = YES;
+				else if(!strncmp(row[16], "N", 1))	conn_info[index]->alarm_yn = NO;
+				else								conn_info[index]->alarm_yn = YES;
+			}
+			if(row[17] != NULL)
+			{
+				if(!strncmp(row[17], "Y", 1))		conn_info[index]->sms_yn = YES;
+				else if(!strncmp(row[17], "N", 1))	conn_info[index]->sms_yn = NO;
+				else								conn_info[index]->sms_yn = YES;
+			}
 		}
 
 		if(result)
@@ -394,6 +421,7 @@ void load_ai_conf(int index)
 #endif
 			i++;
 			pAI++;
+			usleep(1);
 		}
 
 		if(result) { mysql_free_result(result); }
@@ -499,6 +527,11 @@ void load_di_conf(int index)
 					else if(!strncmp(row[13], "W", 1))	pDI->curr_status = WARNING;
 					else if(!strncmp(row[13], "C", 1))	pDI->curr_status = CRITICAL;
 					else								pDI->curr_status = NORMAL;
+					if(pDI->curr_status != NORMAL)		
+					{
+						pDI->send_flag	 = 1; // 태그를 읽었을때 이미 알람이면 미처리
+						pDI->last_status = pDI->curr_status;
+					}
 				}
 				if(row[14] != NULL) pDI->curr_val	= atoi(row[14]);
 				
@@ -544,6 +577,7 @@ void load_di_conf(int index)
 
 				i++;
 				pDI++;
+				usleep(1);
 			}
 		}
 
@@ -580,7 +614,7 @@ int mysqlinsertData(int eseq, int tseq, float value)
 	query_state = mysql_query(conn, query);
 	if (query_state != 0)
 	{
-		fileLog(WARNING, "[%s:%d] MYSQL query error : %s\n", __FUNCTION__, __LINE__, mysql_error(conn));
+		fileLog(WARNING, "[%s:%d] MYSQL query error : %s, eseq=[%d], tseq=[%d], value=[%f]\n", __FUNCTION__, __LINE__, mysql_error(conn), eseq, tseq, value);
 		ret = -1;
 	}
 
@@ -615,7 +649,7 @@ int mysqlUpdateTag(int eseq, int tseq, float value)
 	query_state = mysql_query(conn, query);
 	if (query_state != 0)
 	{
-		fileLog(WARNING, "[%s:%d] MYSQL query error : %s\n", __FUNCTION__, __LINE__, mysql_error(conn));
+		fileLog(WARNING, "[%s:%d] MYSQL query error : %s, eseq=[%d], tseq=[%d], value=[%f]\n", __FUNCTION__, __LINE__, mysql_error(conn), eseq, tseq, value);
 		ret = -1;
 	}
 
@@ -647,20 +681,20 @@ int alarm_insert(int flag, int index, int adio, int seq, int alarm_grade)
 		curr_val = (pAI+seq)->curr_val;
 		if(alarm_grade == CRITICAL)
 		{
-			if((pAI+seq)->sms_yn == YES && (pAI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
+			if(pConnInfo->sms_yn == YES && (pAI+seq)->sms_yn == YES && (pAI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
 
 			th_low = (pAI+seq)->critical_low;
 			th_high = (pAI+seq)->critical_high;
 		}
 		else if(alarm_grade == WARNING)
 		{
-			if((pAI+seq)->sms_yn == YES && (pAI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
+			if(pConnInfo->sms_yn == YES && (pAI+seq)->sms_yn == YES && (pAI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
 			th_low = (pAI+seq)->warning_low;
 			th_high = (pAI+seq)->warning_high;
 		}
 		else if(alarm_grade == INFO)
 		{
-			if((pAI+seq)->sms_yn == YES && (pAI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
+			if(pConnInfo->sms_yn == YES && (pAI+seq)->sms_yn == YES && (pAI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
 			th_low = (pAI+seq)->info_low;
 			th_high = (pAI+seq)->info_high;
 		}
@@ -671,7 +705,7 @@ int alarm_insert(int flag, int index, int adio, int seq, int alarm_grade)
 		curr_val = (pDI+seq)->curr_val;
 		th_low = (pDI+seq)->normal_val;
 		th_high = (pDI+seq)->alarm_val;
-		if((pDI+seq)->sms_yn == YES && (pDI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
+		if(pConnInfo->sms_yn == YES && (pDI+seq)->sms_yn == YES && (pDI+seq)->critical_sms_yn == YES) sms_yn = 'Y';
 	}
 
 	MYSQL *conn;
@@ -699,12 +733,11 @@ int alarm_insert(int flag, int index, int adio, int seq, int alarm_grade)
 	else if(flag == CLEAR)
 	{
 		sprintf(query,  "UPDATE TB_ALARM_LOG SET "
-						"ALARM_STATUS=1, "
-						"REC_DT=now() "
+						"ALARM_STATUS=1, REC_DT=now() "
 						"WHERE "
 						"EQUIP_SEQ=%d AND TAG_SEQ=%d AND ALARM_GRADE_CD=%d ORDER BY REG_DT DESC LIMIT 1;"
 						"UPDATE TB_TAG SET CURRENT_STATUS='N' WHERE TAG_SEQ=%d ORDER BY REG_DT DESC LIMIT 1;",
-						pConnInfo->eseq, tseq, alarm_grade,							
+						pConnInfo->eseq, tseq, alarm_grade, 
 						tseq
 						);
 	}

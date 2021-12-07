@@ -265,35 +265,93 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[78], p[79]);		// 가습기 동작시간
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 				
+			case DDC400 :
 			case AR_MODBUS :
-				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[119],p[120]) / 10.;	// 현재온도
-				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[121],p[122]) / 10.;	// 현재습도
-				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[3],  p[4]) / 10.;		// 설정온도
-				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[5],  p[6]) / 10.;		// 설정습도
-				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[7],  p[8]);			// 정전복귀
-				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[9],  p[10]);			// 정지지연
-				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[11], p[12]);			// 콤프알람
-				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[15], p[16]) / 10.;		// 온도편차
-				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[17], p[18]) / 10.;		// 습도편차 
-				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[19], p[20]) / 10.;		// 전류편차 
-				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[27], p[28]);			// 콤프지연
-				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[29], p[30]);			// 히팅지연
-				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[31], p[32]);			// 펌프다운
-				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[43], p[44]) / 10.;		// 냉방편차
-				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[45], p[46]) / 10.;		// 난방편차
-				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[47], p[48]) / 10.;		// 가습편차
-				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[49], p[50]) / 10.;		// 제습편차
-				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[53], p[54]);			// 콤프1적산시간
-				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[55], p[56]);			// 콤프2적산시간
-				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[57], p[58]);			// 히터1적산시간
-				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[59], p[60]);			// 히터2적산시간
-				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[61], p[62]);			// 히터3적산시간
-				else if(i==22) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[63], p[64]);			// 히터4적산시간
-				else if(i==23) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[65], p[66]);			// 히터5적산시간
-				else if(i==24) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[67], p[68]);			// 가습1적산시간
-				else if(i==25) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[69], p[70]);			// 가습2적산시간
-				else if(i==26) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[71], p[72]) / 10.;		// 고온경보
+					 if(i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  0], p[  1]) / 10.;	// 설정온도
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  2], p[  3]) / 10.;	// 설정습도
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  4], p[  5]);			// 정전복귀
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  6], p[  7]);			// 정지지연
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  8], p[  9]);			// 콤프알람
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 12], p[ 13]) / 10.;	// 온도편차
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 14], p[ 15]) / 10.;	// 습도편차 
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 16], p[ 17]) / 10.;	// 전류편차 
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 24], p[ 25]);			// 콤프지연
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 26], p[ 27]);			// 히팅지연
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 28], p[ 29]);			// 펌프다운
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 40], p[ 41]) / 10.;	// 냉방편차
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 42], p[ 43]) / 10.;	// 난방편차
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 44], p[ 45]) / 10.;	// 가습편차
+				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 46], p[ 47]) / 10.;	// 제습편차
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 50], p[ 51]);			// 콤프1적산시간
+				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 52], p[ 53]);			// 콤프2적산시간
+				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 54], p[ 55]);			// 히터1적산시간
+				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 56], p[ 57]);			// 히터2적산시간
+				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 58], p[ 59]);			// 히터3적산시간
+				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 60], p[ 61]);			// 히터4적산시간
+				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 62], p[ 63]);			// 히터5적산시간
+				else if(i==22) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 64], p[ 65]);			// 가습1적산시간
+				else if(i==23) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 66], p[ 67]);			// 가습2적산시간
+				else if(i==24) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 68], p[ 69]) / 10.;	// 고온경보
+				else if(i==25) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[119], p[120]) / 10.;	// 현재온도
+				else if(i==26) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[121], p[122]) / 10.;	// 현재습도
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+				
+			case DDC_UNKNOWN :
+					 if(i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  0], p[  1]) / 10.;	// 설정온도(°C)
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  2], p[  3]) / 10.;	// 설정습도(%)
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  4], p[  5]) / 10.;	// 냉방편차(°C)
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  6], p[  7]) / 10.;	// 난방편차(°C)
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[  8], p[  9]) / 10.;	// 가습편차(%)
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 10], p[ 11]) / 10.;	// 제습편차(%)
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 12], p[ 13]);			// 정전복귀(초)
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 14], p[ 15]);			// 정지지연(초)
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 16], p[ 17]);			// 냉방지연(초)
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 18], p[ 19]);			// 난방지연(초)
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 20], p[ 21]);			// 펌프다운(초)
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 22], p[ 23]) / 10.;	// 제습저온정지(°C)
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 26], p[ 27]) / 10.;	// 온도센서보정(°C)
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 28], p[ 29]) / 10.;	// 습도센서보정(%)
+				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 30], p[ 31]) / 10.;	// 전류센서보정(A)
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 32], p[ 33]);			// 입력1번시간설정(초)
+				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 34], p[ 35]);			// 입력2번시간설정(초)
+				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 36], p[ 37]);			// 입력3번시간설정(초)
+				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 38], p[ 39]);			// 입력4번시간설정(초)
+				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 40], p[ 41]);			// 입력5번시간설정(초)
+				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 42], p[ 43]);			// 입력6번시간설정(초)
+				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 44], p[ 45]);			// 입력7번시간설정(초)
+				else if(i==22) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 46], p[ 47]);			// 입력8번시간설정(초)
+				else if(i==23) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 52], p[ 53]);			// 설정용량(Kg)
+				else if(i==24) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 54], p[ 55]);			// 배수횟수(회)
+				else if(i==25) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 58], p[ 59]);			// 냉방스텝(스텝)
+				else if(i==26) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 60], p[ 61]);			// 제습스텝(스텝)
+				else if(i==27) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 62], p[ 63]);			// 난방스텝(스텝)
+				else if(i==28) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 64], p[ 65]);			// 가습스텝(스텝)
+				else if(i==29) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 76], p[ 77]);			// 콤프1적산시간(초)
+				else if(i==30) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 78], p[ 79]);			// 콤프2적산시간(초)
+				else if(i==31) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 80], p[ 81]);			// 난방1적산시간(초)
+				else if(i==32) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 82], p[ 83]);			// 난방2적산시간(초)
+				else if(i==33) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 84], p[ 85]);			// 난방3적산시간(초)
+				else if(i==34) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 86], p[ 87]);			// 난방4적산시간(초)
+				else if(i==35) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 88], p[ 89]);			// 난방5적산시간(초)
+				else if(i==36) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 90], p[ 91]);			// 가습1적산시간(초)
+				else if(i==37) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 92], p[ 93]);			// 가습2적산시간(초)
+				else if(i==38) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 94], p[ 95]) / 10.;	// 고온경보(°C)
+				else if(i==39) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 96], p[ 97]) / 10.;	// 고습경보(%)
+				else if(i==40) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[ 98], p[ 99]) / 10.;	// 저온경보(°C)
+				else if(i==41) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[100], p[101]) / 10.;	// 저습경보(%)
+				else if(i==42) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[102], p[103]);			// 가습지연(초)
+				else if(i==43) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[104], p[105]) / 10.;	// 제습고온정지(°C)
+				else if(i==44) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[138], p[139]) / 10.;	// 현재온도(°C)
+				else if(i==45) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[140], p[141]) / 10.;	// 현재습도(%)
+				else if(i==46) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[142], p[143]) / 10.;	// 현재전류(A)
+				else if(i==47) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[144], p[145]);			// AO01출력(%)
+				else if(i==48) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[146], p[147]);			// AO02출력(%)
+				else if(i==49) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[148], p[149]);			// AO03출력(%)
+				else if(i==50) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[156], p[157]);			// 정전복귀 남은시간(초)
+				else if(i==51) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[158], p[159]);			// 정지지연 남은시간(초)
+				else if(i==52) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[162], p[163]) / 10.;			// 송풍출력(%)
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
 			case RTU_AR_MODBUS :
 				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]) / 10;		// 현재 온도
 				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]) / 10;		// 현재 습도
@@ -644,34 +702,34 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 
 			case DPM_GiMACi :
 			case DPM_GiMACi_SG1040 :
-				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 3], p[ 2], p[ 1], p[ 0]); // 평균전압
-				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 7], p[ 6], p[ 5], p[ 4]); // 평균전류
-				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[11], p[10], p[ 9], p[ 8]); // R상전류
-				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[15], p[14], p[13], p[12]); // S상전류
-				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[19], p[18], p[17], p[16]); // T상전류
-				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[23], p[22], p[21], p[20]); // R상전압
-				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[27], p[26], p[25], p[24]); // S상전압
-				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[31], p[30], p[29], p[28]); // T상전압
-				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[35], p[34], p[33], p[32]); // RS상전압
-				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[39], p[38], p[37], p[36]); // ST상전압
-				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[43], p[42], p[41], p[40]); // TR상전압
-				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[47], p[46], p[45], p[44]); // 역률
-				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[51], p[50], p[49], p[48]) / 1000.; // 유효전력
-				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[55], p[54], p[53], p[52]) / 1000.; // 무효전력
-				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[59], p[58], p[57], p[56]) / 1000.; // 피상전력
-				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[63], p[62], p[61], p[60]); // 주파수
-				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[67], p[66], p[65], p[64]) / 1000000.; // 유효전력량
-				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[71], p[70], p[69], p[68]) / 1000.; // 무효전력량
-				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[75], p[74], p[73], p[72]) / 1000.; // 피상전력량
-				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[79], p[78], p[77], p[76]); // Ia부하율
-				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[83], p[82], p[81], p[80]); // Ib부하율
-				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[87], p[86], p[85], p[84]); // Ic부하율
+				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 1], p[ 0], p[ 3], p[ 2]); // 평균전압
+				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 5], p[ 4], p[ 7], p[ 6]); // 평균전류
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[ 9], p[ 8], p[11], p[10]); // R상전류
+				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[13], p[12], p[15], p[14]); // S상전류
+				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[17], p[16], p[19], p[18]); // T상전류
+				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[21], p[20], p[23], p[22]); // R상전압
+				else if(i== 6) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[25], p[24], p[27], p[26]); // S상전압
+				else if(i== 7) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[29], p[28], p[31], p[30]); // T상전압
+				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[33], p[32], p[35], p[34]); // RS상전압
+				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[37], p[36], p[39], p[38]); // ST상전압
+				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[41], p[40], p[43], p[42]); // TR상전압
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[45], p[44], p[47], p[46]); // 역률
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[49], p[48], p[51], p[50]) / 1000.; // 유효전력
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[53], p[52], p[55], p[54]) / 1000.; // 무효전력
+				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[57], p[56], p[59], p[58]) / 1000.; // 피상전력
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[61], p[60], p[63], p[62]); // 주파수
+				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[65], p[64], p[67], p[66]) / 1000000.; // 유효전력량
+				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[69], p[68], p[71], p[70]) / 1000.; // 무효전력량
+				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[73], p[72], p[75], p[74]) / 1000.; // 피상전력량
+				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[77], p[76], p[79], p[78]); // Ia부하율
+				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[81], p[80], p[83], p[82]); // Ib부하율
+				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_float_value4(p[85], p[84], p[87], p[86]); // Ic부하율
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 
 			case RTU_DPM_GiMACi :
 				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]) / 10.; // 평균전압
 				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]) / 10.; // 평균전류
-				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 5]) / 10.; // R상전류
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 4], p[ 5]) / 10.; // R상전류
 				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 6], p[ 7]) / 10.; // S상전류
 				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 9]) / 10.; // T상전류
 				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[10], p[11]) / 10.; // R상전압
@@ -781,7 +839,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 			case RTU_DPM_GiMACIIPlus :
 				if     (i== 0) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 0], p[ 1]) / 10.; // RS상전압
 				else if(i== 1) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 2], p[ 3]) / 10.; // ST상전압
-				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 5]) / 10.; // TS상전압
+				else if(i== 2) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 4], p[ 5]) / 10.; // TS상전압
 				else if(i== 3) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 6], p[ 7]) / 10.; // R상전압
 				else if(i== 4) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[ 8], p[ 9]) / 10.; // S상전압
 				else if(i== 5) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[10], p[11]) / 10.; // T상전압
@@ -1559,19 +1617,19 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 		
 		if(pAI->use_yn == YES && com_state == COM_NORMAL)
 		{
-			if(pAI->alarm_yn == YES)
+			if(pConnInfo->alarm_yn == YES && pAI->alarm_yn == YES)
 			{
-				if(pAI->tm_alarm==0) pAI->tm_alarm = time(NULL);
+				if(pAI->tm_alarm == 0) pAI->tm_alarm = time(NULL);
 
-				if((pAI->curr_val > pAI->critical_high || pAI->curr_val < pAI->critical_low) && pAI->critical_alarm_yn == YES)
+				if(pAI->critical_alarm_yn == YES && (pAI->curr_val > pAI->critical_high || pAI->curr_val < pAI->critical_low))
 				{
 					pAI->curr_status = CRITICAL;
 				}
-				else if((pAI->curr_val > pAI->warning_high || pAI->curr_val < pAI->warning_low) && pAI->warning_alarm_yn == YES)
+				else if(pAI->warning_alarm_yn == YES && (pAI->curr_val > pAI->warning_high || pAI->curr_val < pAI->warning_low))
 				{
 					pAI->curr_status = WARNING;
 				}
-				else if((pAI->curr_val > pAI->info_high || pAI->curr_val < pAI->info_low) && pAI->info_alarm_yn == YES)
+				else if(pAI->info_alarm_yn == YES && (pAI->curr_val > pAI->info_high || pAI->curr_val < pAI->info_low))
 				{
 					pAI->curr_status = INFO;
 				}
@@ -1580,7 +1638,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 					pAI->curr_status = NORMAL;
 					pAI->tm_alarm = time(NULL);
 				}
-				
+
 				// 알람 일때
 				if(pAI->send_flag==0 && pAI->curr_status != NORMAL )
 				{
@@ -1588,6 +1646,10 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 					if(ai_diff >= pAI->alarm_term)
 					{
 						pAI->send_flag = 1;
+			fileLog(INFO,"55555555555555555555555\n");
+						fileLog(INFO, "eseq=[%d] tseq=[%d] pConnInfo->alarmyn=[%d] pAI->useyn=[%d] pAI->alarmyn=[%d] pAI->curr_val[%.2f], pAI->high=[%.2f], pAI->low=[%.2f], pAI->crialarmyn=[%d]\n",
+						pConnInfo->eseq, pAI->tseq, pConnInfo->alarm_yn, pAI->use_yn, pAI->alarm_yn, pAI->curr_val, pAI->critical_high, pAI->critical_low,pAI->critical_alarm_yn);
+
 						alarm_insert(OCCURE, index, AI, i, pAI->curr_status);
 						pAI->last_status = pAI->curr_status;
 						//LOG_ALARM INSERT
@@ -1596,7 +1658,9 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				// 더 상위 알람
 				else if(pAI->send_flag==1 && pAI->last_status < pAI->curr_status)
 				{
+			fileLog(INFO,"666666666666666666\n");
 					alarm_insert(CLEAR, index, AI, i, pAI->last_status);
+			fileLog(INFO,"7777777777777777777\n");
 					alarm_insert(OCCURE, index, AI, i, pAI->curr_status);
 					pAI->last_status = pAI->curr_status;
 				}
@@ -1604,6 +1668,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(pAI->send_flag == 1 && pAI->curr_status == NORMAL)
 				{
 					pAI->send_flag = 0;
+			fileLog(INFO,"8888888888888888\n");
 					alarm_insert(CLEAR, index, AI, i, pAI->last_status);
 					//LOG_ALARM RECOVER
 				}
@@ -1620,8 +1685,6 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				pAI->tm_save = time(NULL);
 			}
 
-			//데이터 로그 업데이트
-			//update_diff = difftime(now, pConnInfo->tm_update);
 			update_diff = difftime(now, pAI->tm_update);
 			if(update_diff >= pAI->update_term || pAI->tm_update == 0)
 			{
@@ -1808,44 +1871,136 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i==26) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[69] & 0x01) ? DI_ON : DI_OFF; // 가습상태(전류감지)
 				else if(i==27) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[81] & 0x01) ? DI_ON : DI_OFF; // 운전상태(기동/정지)
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
-				
+			
+			case DDC400 :
 			case AR_MODBUS :
-				if     (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 75], p[ 76]) & 0x02 ? DI_ON : DI_OFF; /* 팬상태 */
-				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 75], p[ 76]) & 0x04 ? DI_ON : DI_OFF; /* 냉방상태 */
-				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 75], p[ 76]) & 0x08 ? DI_ON : DI_OFF; /* 난방상태 */
-				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 75], p[ 76]) & 0x10 ? DI_ON : DI_OFF; /* 가습상태 */
-				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 75], p[ 76]) & 0x20 ? DI_ON : DI_OFF; /* 제습상태 */
-				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0001 ? DI_ON : DI_OFF; /* 송풍기이상 */
-				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0002 ? DI_ON : DI_OFF; /* 콤프1이상 */
-				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0004 ? DI_ON : DI_OFF; /* 콤프2이상 */
-				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0008 ? DI_ON : DI_OFF; /* 온도센서이상 */
-				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0010 ? DI_ON : DI_OFF; /* 습도센서이상 */
-				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0020 ? DI_ON : DI_OFF; /* 가습기이상 */
-				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0040 ? DI_ON : DI_OFF; /* 누수이상 */
-				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0080 ? DI_ON : DI_OFF; /* 냉수이상 */
-				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0100 ? DI_ON : DI_OFF; /* 필터이상 */
-				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 77], p[ 78]) & 0x0200 ? DI_ON : DI_OFF; /* 고온이상 */
-				else if(i==15) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 79], p[ 80]) & 0x0001 ? DI_ON : DI_OFF; /* 난방기이상 */
-				else if(i==16) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x02 ? DI_ON : DI_OFF; /* 솔레노이드1 */
-				else if(i==17) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x08 ? DI_ON : DI_OFF; /* 솔레노이드2 */
-				else if(i==18) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x20 ? DI_ON : DI_OFF; /* 히터1 */
-				else if(i==19) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x40 ? DI_ON : DI_OFF; /* 히터2 */
-				else if(i==20) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x80 ? DI_ON : DI_OFF; /* 히터3 */
-				else if(i==21) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x01 ? DI_ON : DI_OFF; /* 히터4 */
-				else if(i==22) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x02 ? DI_ON : DI_OFF; /* 히터5 */
-				else if(i==23) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x04 ? DI_ON : DI_OFF; /* 가습1 */
-				else if(i==24) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x08 ? DI_ON : DI_OFF; /* 가습2 */
-				else if(i==25) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 75], p[ 76]) & 0x01 ? DI_ON : DI_OFF; /* 가동/정지 */
-				else if(i==26) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x01 ? DI_ON : DI_OFF; /* 송풍기 */
-				else if(i==27) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x04 ? DI_ON : DI_OFF; /* 콤프1 */
-				else if(i==28) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[111], p[112]) & 0x10 ? DI_ON : DI_OFF; /* 콤프2 */
-				else if(i==29) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x10 ? DI_ON : DI_OFF; /* 급수 */
-				else if(i==30) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x20 ? DI_ON : DI_OFF; /* 배수 */
-				else if(i==31) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[113], p[114]) & 0x40 ? DI_ON : DI_OFF; /* 알람 */
-				else if(i==32) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[115], p[116]) & 0x20 ? DI_ON : DI_OFF; /* 누수 */
-				else if(i==33) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[115], p[116]) & 0x40 ? DI_ON : DI_OFF; /* 수위 */
-				else if(i==34) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[115], p[116]) & 0x80 ? DI_ON : DI_OFF; /* Water_Flow */
+					 if(i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x01 ? DI_ON : DI_OFF; /* 가동/정지 */
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x02 ? DI_ON : DI_OFF; /* 팬상태 */
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x04 ? DI_ON : DI_OFF; /* 냉방상태 */
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x08 ? DI_ON : DI_OFF; /* 난방상태 */
+				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x10 ? DI_ON : DI_OFF; /* 가습상태 */
+				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x20 ? DI_ON : DI_OFF; /* 제습상태 */
+
+				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0001 ? DI_ON : DI_OFF; /* 송풍기 점검 */
+				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0002 ? DI_ON : DI_OFF; /* 콤프1 점검 */
+				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0004 ? DI_ON : DI_OFF; /* 콤프2 점검 */
+				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0008 ? DI_ON : DI_OFF; /* 온도센서 점검 */
+				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0010 ? DI_ON : DI_OFF; /* 습도센서 점검 */
+				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0020 ? DI_ON : DI_OFF; /* 가습기 점검 */
+				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0040 ? DI_ON : DI_OFF; /* 누수 점검 */
+				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0080 ? DI_ON : DI_OFF; /* 냉수 점검 */
+				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0100 ? DI_ON : DI_OFF; /* 필터 점검 */
+				else if(i==15) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x0200 ? DI_ON : DI_OFF; /* 고온 점검 */
+
+				else if(i==16) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 76], p[ 77]) & 0x0001 ? DI_ON : DI_OFF; /* 난방기 점검 */
+				else if(i==17) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 76], p[ 77]) & 0x0002 ? DI_ON : DI_OFF; /* 전류 부족 */
+				else if(i==18) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 76], p[ 77]) & 0x0004 ? DI_ON : DI_OFF; /* 배수 점검 */
+				else if(i==19) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 76], p[ 77]) & 0x0008 ? DI_ON : DI_OFF; /* 가습기과전류 점검 */
+				else if(i==20) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 76], p[ 77]) & 0x0001 ? DI_ON : DI_OFF; /* 급수 점검 */
+
+				else if(i==21) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x01 ? DI_ON : DI_OFF; /* 송풍기 상태 */
+				else if(i==22) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x02 ? DI_ON : DI_OFF; /* 솔레노이드1 상태 */
+				else if(i==23) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x04 ? DI_ON : DI_OFF; /* 콤프1 상태 */
+				else if(i==24) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x08 ? DI_ON : DI_OFF; /* 솔레노이드2 상태 */
+				else if(i==25) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x10 ? DI_ON : DI_OFF; /* 콤프2 상태 */
+				else if(i==26) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x20 ? DI_ON : DI_OFF; /* 히터1 상태 */
+				else if(i==27) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x40 ? DI_ON : DI_OFF; /* 히터2 상태 */
+				else if(i==28) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[108], p[109]) & 0x80 ? DI_ON : DI_OFF; /* 히터3 상태 */
+
+				else if(i==29) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x01 ? DI_ON : DI_OFF; /* 히터4 상태 */
+				else if(i==30) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x02 ? DI_ON : DI_OFF; /* 히터5 상태 */
+				else if(i==31) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x04 ? DI_ON : DI_OFF; /* 가습1 상태 */
+				else if(i==32) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x08 ? DI_ON : DI_OFF; /* 가습2 상태 */
+				else if(i==33) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x10 ? DI_ON : DI_OFF; /* 급수 상태 */
+				else if(i==34) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x20 ? DI_ON : DI_OFF; /* 배수 상태 */
+				else if(i==35) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x40 ? DI_ON : DI_OFF; /* 알람 상태 */
+
+				else if(i==36) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x01 ? DI_ON : DI_OFF; /* 송풍기 알람 */
+				else if(i==37) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x02 ? DI_ON : DI_OFF; /* 콤프1 알람 */
+				else if(i==38) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x04 ? DI_ON : DI_OFF; /* 콤프2 알람 */
+				else if(i==39) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x08 ? DI_ON : DI_OFF; /* 히터 알람 */
+				else if(i==40) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x10 ? DI_ON : DI_OFF; /* 가습기 알람 */
+				else if(i==41) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x20 ? DI_ON : DI_OFF; /* 누수 */
+				else if(i==42) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x40 ? DI_ON : DI_OFF; /* 수위 */
+				else if(i==43) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x80 ? DI_ON : DI_OFF; /* Water_Flow */
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
+			case DDC_UNKNOWN :
+					 if(i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 24], p[ 25]) & 0x01 ? DI_ON : DI_OFF; /* 언어설정 */
+				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0001 ? DI_ON : DI_OFF; /* 입력01 접점 */
+				else if(i== 2) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0002 ? DI_ON : DI_OFF; /* 입력02 접점 */
+				else if(i== 3) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0004 ? DI_ON : DI_OFF; /* 입력03 접점 */
+				else if(i== 4) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0008 ? DI_ON : DI_OFF; /* 입력04 접점 */
+				else if(i== 5) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0010 ? DI_ON : DI_OFF; /* 입력05 접점 */
+				else if(i== 6) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0020 ? DI_ON : DI_OFF; /* 입력06 접점 */
+				else if(i== 7) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0040 ? DI_ON : DI_OFF; /* 입력07 접점 */
+				else if(i== 8) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0080 ? DI_ON : DI_OFF; /* 입력08 접점 */
+				else if(i== 9) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0100 ? DI_ON : DI_OFF; /* 입력09 접점 */
+				else if(i==10) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 48], p[ 49]) & 0x0200 ? DI_ON : DI_OFF; /* 입력10 접점 */
+				else if(i==11) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 50], p[ 51]) & 0x01 ? DI_ON : DI_OFF; /* 설정전압 */				
+				else if(i==12) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 56], p[ 57]) & 0x01 ? DI_ON : DI_OFF; /* 가습기 종류 */
+				else if(i==13) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 66], p[ 67]) & 0x01 ? DI_ON : DI_OFF; /* 냉방교번운전 */
+				else if(i==14) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 68], p[ 69]) & 0x01 ? DI_ON : DI_OFF; /* 난방교번운전 */
+				else if(i==15) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 70], p[ 71]) & 0x01 ? DI_ON : DI_OFF; /* AO01설정 */
+				else if(i==16) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 72], p[ 73]) & 0x01 ? DI_ON : DI_OFF; /* AO02설정 */
+				else if(i==17) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[ 74], p[ 75]) & 0x01 ? DI_ON : DI_OFF; /* AO03설정 */
+				else if(i==18) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[102], p[103]) & 0x01 ? DI_ON : DI_OFF; /* 냉방시가습 */
+				else if(i==19) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[104], p[105]) & 0x01 ? DI_ON : DI_OFF; /* 가습교번운전 */
+				else if(i==20) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x01 ? DI_ON : DI_OFF; /* 전원 상태 */
+				else if(i==21) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x02 ? DI_ON : DI_OFF; /* 냉방 상태*/
+				else if(i==22) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x04 ? DI_ON : DI_OFF; /* 난방 상태 */
+				else if(i==23) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x08 ? DI_ON : DI_OFF; /* 가습 상태 */
+				else if(i==24) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x10 ? DI_ON : DI_OFF; /* 제습 상태 */
+				else if(i==25) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[110], p[111]) & 0x80 ? DI_ON : DI_OFF; /* 시간 클리어 상태 */
+				else if(i==26) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0001 ? DI_ON : DI_OFF; /* 송풍기 점검 */
+				else if(i==27) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0002 ? DI_ON : DI_OFF; /* 압축기1 점검 */
+				else if(i==28) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0004 ? DI_ON : DI_OFF; /* 압축기2 점검 */
+				else if(i==29) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0008 ? DI_ON : DI_OFF; /* 온도센서 점검 */
+				else if(i==30) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0010 ? DI_ON : DI_OFF; /* 습도센서 점검 */
+				else if(i==31) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0020 ? DI_ON : DI_OFF; /* 누수 점검 */
+				else if(i==32) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0040 ? DI_ON : DI_OFF; /* 저온 점검 */
+				else if(i==33) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0080 ? DI_ON : DI_OFF; /* 고온 점검 */
+				else if(i==34) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0100 ? DI_ON : DI_OFF; /* 저습 점검 */
+				else if(i==35) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[112], p[113]) & 0x0200 ? DI_ON : DI_OFF; /* 고습 점검 */
+				else if(i==36) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x01 ? DI_ON : DI_OFF; /* 난방기 점검 */
+				else if(i==37) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x02 ? DI_ON : DI_OFF; /* 전류센서 점검 */
+				else if(i==38) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x04 ? DI_ON : DI_OFF; /* 배수 점검 3회 */
+				else if(i==39) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x08 ? DI_ON : DI_OFF; /* 가습기과전류 점검 */
+				else if(i==40) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x10 ? DI_ON : DI_OFF; /* 급수 점검 */
+				else if(i==41) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x20 ? DI_ON : DI_OFF; /* 수위봉결선확인 */
+				else if(i==42) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x40 ? DI_ON : DI_OFF; /* 급수 점검 */
+				else if(i==43) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[114], p[115]) & 0x80 ? DI_ON : DI_OFF; /* 가습기 점검 */
+				else if(i==44) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x01 ? DI_ON : DI_OFF; /* 출력-송풍기 상태 */
+				else if(i==45) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x02 ? DI_ON : DI_OFF; /* 출력-솔레노이드1 상태 */
+				else if(i==46) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x04 ? DI_ON : DI_OFF; /* 출력-콤프1 상태 */
+				else if(i==47) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x08 ? DI_ON : DI_OFF; /* 출력-솔레노이드2 상태 */
+				else if(i==48) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x10 ? DI_ON : DI_OFF; /* 출력-콤프2 상태 */
+				else if(i==49) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x20 ? DI_ON : DI_OFF; /* 출력-히터1 상태 */
+				else if(i==50) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x40 ? DI_ON : DI_OFF; /* 출력-히터2 상태 */
+				else if(i==51) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[130], p[131]) & 0x80 ? DI_ON : DI_OFF; /* 출력-히터3 상태 */
+				else if(i==52) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x01 ? DI_ON : DI_OFF; /* 출력-히터4 상태 */
+				else if(i==53) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x02 ? DI_ON : DI_OFF; /* 출력-히터5 상태 */
+				else if(i==54) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x04 ? DI_ON : DI_OFF; /* 출력-가습1 상태 */
+				else if(i==55) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x08 ? DI_ON : DI_OFF; /* 출력-가습2 상태 */
+				else if(i==56) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x10 ? DI_ON : DI_OFF; /* 출력-급수 상태 */
+				else if(i==57) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x20 ? DI_ON : DI_OFF; /* 출력-배수 상태 */
+				else if(i==58) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[132], p[133]) & 0x40 ? DI_ON : DI_OFF; /* 출력-통합경보 상태 */
+				else if(i==59) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[134], p[135]) & 0x01 ? DI_ON : DI_OFF; /* 입력-하론 상태 */
+				else if(i==60) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[134], p[135]) & 0x02 ? DI_ON : DI_OFF; /* 입력-리모트 상태 */
+				else if(i==61) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x01 ? DI_ON : DI_OFF; /* 입력-송풍기 상태 */
+				else if(i==62) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x02 ? DI_ON : DI_OFF; /* 입력-콤프1 상태 */
+				else if(i==63) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x04 ? DI_ON : DI_OFF; /* 입력-콤프2 상태 */
+				else if(i==64) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x08 ? DI_ON : DI_OFF; /* 입력-히터 상태 */
+				else if(i==65) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x10 ? DI_ON : DI_OFF; /* 입력-가습 상태 */
+				else if(i==66) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x20 ? DI_ON : DI_OFF; /* 입력-누수 상태 */
+				else if(i==67) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x40 ? DI_ON : DI_OFF; /* 입력-저수위 상태 */
+				else if(i==68) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[136], p[137]) & 0x80 ? DI_ON : DI_OFF; /* 입력-만수위 상태 */
+				else if(i==69) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[150], p[151]) & 0x01 ? DI_ON : DI_OFF; /* 제습방식 */
+				else if(i==70) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[152], p[153]) & 0x01 ? DI_ON : DI_OFF; /* 리모트정지 */
+				else if(i==71) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[154], p[156]) & 0x01 ? DI_ON : DI_OFF; /* 하론정지 */
+				else if(i==72) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : get_short_value(p[160], p[161]) & 0x01 ? DI_ON : DI_OFF; /* 모드설정 */
+				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
+
 			case RTU_AR_MODBUS :
 				if     (i== 0) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[54] & 0x01) ? DI_ON : DI_OFF; // 팬 상태      
 				else if(i== 1) pDI->curr_val = com_state==COM_ABNORMAL ? pDI->curr_val : (p[54] & 0x02) ? DI_ON : DI_OFF; // 냉방상태     
@@ -2230,7 +2385,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 
 		if(pDI->use_yn == YES && com_state == COM_NORMAL)
 		{
-			if(pDI->alarm_yn == YES)
+			if(pConnInfo->alarm_yn == YES && pDI->alarm_yn == YES)
 			{
 				if(pDI->tm_alarm==0) pDI->tm_alarm = time(NULL);
 
@@ -2249,6 +2404,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 					if(di_diff >= pDI->alarm_term)
 					{
 						pDI->send_flag = 1;
+			fileLog(INFO,"999999999999999999999\n");
 						alarm_insert(OCCURE, index, DI, i, pDI->curr_status);
 						pDI->last_status = pDI->curr_status;
 					}
@@ -2257,6 +2413,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(pDI->send_flag == 1 && pDI->curr_status == NORMAL)
 				{
 					pDI->send_flag = 0;
+			fileLog(INFO,"aaaaaaaaaaaaaaaaaaaaa\n");
 					alarm_insert(CLEAR, index, DI, i, pDI->last_status);
 				}
 			}

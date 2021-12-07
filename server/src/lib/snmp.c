@@ -182,157 +182,158 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 		switch(pConnInfo->model_seq)
 		{
 			case SNMP_NETAGENT_MINI_1PHASE:
-				if(index == 0)		pAI->curr_val = strtof(ptr, &endptr) / 10.;	//배터리 용량
-				else if(index == 1)	pAI->curr_val = strtof(ptr, &endptr) / 10.;	//배터리 전압
-				else if(index == 2)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 온도
-				else if(index == 3)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 잔여 시간
-				else if(index == 4)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 충전률
-				else if(index == 5)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 가동시간
-				else if(index == 6)	pAI->curr_val = strtof(ptr, &endptr);		//입력 전압
-				else if(index == 7)	pAI->curr_val = strtof(ptr, &endptr);		//입력 주파수
-				else if(index == 8)	pAI->curr_val = strtof(ptr, &endptr);		//출력 전압
-				else if(index == 9)	pAI->curr_val = strtof(ptr, &endptr) / 10.;	//출력 주파수
-				else if(index ==10)	pAI->curr_val = strtof(ptr, &endptr);		//출력 부하율
+					 if(index== 0)	pAI->curr_val = strtof(ptr, &endptr) / 10.;	//배터리 용량
+				else if(index== 1)	pAI->curr_val = strtof(ptr, &endptr) / 10.;	//배터리 전압
+				else if(index== 2)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 온도
+				else if(index== 3)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 잔여 시간
+				else if(index== 4)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 충전률
+				else if(index== 5)	pAI->curr_val = strtof(ptr, &endptr) / 10.; //배터리 가동시간
+				else if(index== 6)	pAI->curr_val = strtof(ptr, &endptr);		//입력 전압
+				else if(index== 7)	pAI->curr_val = strtof(ptr, &endptr);		//입력 주파수
+				else if(index== 8)	pAI->curr_val = strtof(ptr, &endptr);		//출력 전압
+				else if(index== 9)	pAI->curr_val = strtof(ptr, &endptr) / 10.;	//출력 주파수
+				else if(index==10)	pAI->curr_val = strtof(ptr, &endptr);		//출력 부하율
 				else return;
 				break;
 
 			case SNMP_MGE_GALAXY_5000:
-				if(index == 0)		pAI->curr_val = strtof(ptr, &endptr) / 10.;//배터리 전압
-				else if(index == 1)	pAI->curr_val = strtof(ptr, &endptr);//배터리 전류
-				else if(index == 2)	pAI->curr_val = strtof(ptr, &endptr);//배터리 온도
-				else if(index == 3)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(R)
-				else if(index == 4)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(S)
-				else if(index == 5)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(T)
-				else if(index == 6)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 R
-				else if(index == 7)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 S
-				else if(index == 8)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 T
-				else if(index == 9)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 R
-				else if(index ==10)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 S
-				else if(index ==11)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 T
-				else if(index ==12)	pAI->curr_val = strtof(ptr, &endptr);//출력상태(1/3)상
-				else if(index ==13)	pAI->curr_val = strtof(ptr, &endptr) / 10;//출력 주파수
-				else if(index ==14)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 R
-				else if(index ==15)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 S
-				else if(index ==16)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 T
-				else if(index ==17)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 R
-				else if(index ==18)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 S
-				else if(index ==19)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 T
-				else if(index ==20)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 R
-				else if(index ==21)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 S
-				else if(index ==22)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 T
-				else if(index ==23)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 R
-				else if(index ==24)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 S
-				else if(index ==25)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 T
-				else if(index ==26)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//바이패스 주파수
-				else if(index ==27)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 R
-				else if(index ==28)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 S
-				else if(index ==29)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 T
+					 if(index== 0)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//배터리 전압
+				else if(index== 1)	pAI->curr_val = strtof(ptr, &endptr);//배터리 전류
+				else if(index== 2)	pAI->curr_val = strtof(ptr, &endptr);//배터리 온도
+				else if(index== 3)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(R)
+				else if(index== 4)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(S)
+				else if(index== 5)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(T)
+				else if(index== 6)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 R
+				else if(index== 7)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 S
+				else if(index== 8)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 T
+				else if(index== 9)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 R
+				else if(index==10)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 S
+				else if(index==11)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 T
+				else if(index==12)	pAI->curr_val = strtof(ptr, &endptr);//출력상태(1/3)상
+				else if(index==13)	pAI->curr_val = strtof(ptr, &endptr) / 10;//출력 주파수
+				else if(index==14)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 R
+				else if(index==15)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 S
+				else if(index==16)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 T
+				else if(index==17)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 R
+				else if(index==18)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 S
+				else if(index==19)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 T
+				else if(index==20)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 R
+				else if(index==21)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 S
+				else if(index==22)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 T
+				else if(index==23)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 R
+				else if(index==24)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 S
+				else if(index==25)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 T
+				else if(index==26)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//바이패스 주파수
+				else if(index==27)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 R
+				else if(index==28)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 S
+				else if(index==29)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 T
 				else return;
 				break;
 				
 			case SNMP_HIPULSE_U:
-				if(index == 0)		pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 A
-				else if(index == 1)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 B
-				else if(index == 2)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 C
-				else if(index == 3)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 A
-				else if(index == 4)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 B
-				else if(index == 5)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 C
-				else if(index == 6)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 주파수
-				else if(index == 7)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 A
-				else if(index == 8)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 B
-				else if(index == 9)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 C
-				else if(index ==10)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 주파수
-				else if(index ==11)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 A
-				else if(index ==12)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 B
-				else if(index ==13)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 C
-				else if(index ==14)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 A
-				else if(index ==15)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 B
-				else if(index ==16)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 C
-				else if(index ==17)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 주파수
-				else if(index ==18)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 A
-				else if(index ==19)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 B
-				else if(index ==20)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 C
-				else if(index ==21)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효전력 A
-				else if(index ==22)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효전력 B
-				else if(index ==23)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효전력 C
-				else if(index ==24)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상전력 A
-				else if(index ==25)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상전력 B
-				else if(index ==26)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상전력 C
-				else if(index ==27)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효전력 A
-				else if(index ==28)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효전력 B
-				else if(index ==29)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효전력 C				
-				else if(index ==30)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 A
-				else if(index ==31)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 B
-				else if(index ==32)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 C
-				else if(index ==33)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전압
-				else if(index ==34)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전류				
-				else if(index ==35)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 유효전력 A
-				else if(index ==36)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 유효전력 B
-				else if(index ==37)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 유효전력 C
-				else if(index ==38)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 피상전력 A
-				else if(index ==39)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 피상전력 B
-				else if(index ==40)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 피상전력 C
-				else if(index ==41)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 무효전력 A
-				else if(index ==42)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 무효전력 B
-				else if(index ==43)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 무효전력 C
-				else if(index ==44)	pAI->curr_val = strtof(ptr, &endptr);//시스템 이상
+					 if(index== 0)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 A
+				else if(index== 1)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 B
+				else if(index== 2)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 C
+				else if(index== 3)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 A
+				else if(index== 4)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 B
+				else if(index== 5)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 C
+				else if(index== 6)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 주파수
+				else if(index== 7)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 A
+				else if(index== 8)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 B
+				else if(index== 9)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 C
+				else if(index==10)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 주파수
+				else if(index==11)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 A
+				else if(index==12)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 B
+				else if(index==13)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 C
+				else if(index==14)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 A
+				else if(index==15)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 B
+				else if(index==16)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 C
+				else if(index==17)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 주파수
+				else if(index==18)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 A
+				else if(index==19)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 B
+				else if(index==20)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 C
+				else if(index==21)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효전력 A
+				else if(index==22)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효전력 B
+				else if(index==23)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효전력 C
+				else if(index==24)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상전력 A
+				else if(index==25)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상전력 B
+				else if(index==26)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상전력 C
+				else if(index==27)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효전력 A
+				else if(index==28)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효전력 B
+				else if(index==29)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효전력 C				
+				else if(index==30)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 A
+				else if(index==31)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 B
+				else if(index==32)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 C
+				else if(index==33)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전압
+				else if(index==34)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전류				
+				else if(index==35)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 유효전력 A
+				else if(index==36)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 유효전력 B
+				else if(index==37)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 유효전력 C
+				else if(index==38)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 피상전력 A
+				else if(index==39)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 피상전력 B
+				else if(index==40)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 피상전력 C
+				else if(index==41)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 무효전력 A
+				else if(index==42)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 무효전력 B
+				else if(index==43)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//병렬 시스템 무효전력 C
+				else if(index==44)	pAI->curr_val = strtof(ptr, &endptr);//시스템 이상
 				else return;
 				break;
 				
 			case SNMP_EMERSON_APM:
-				if(index == 0)		pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 R
-				else if(index == 1)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 S
-				else if(index == 2)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 T
-				else if(index == 3)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 RS
-				else if(index == 4)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 ST
-				else if(index == 5)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 TR
-				else if(index == 6)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 R
-				else if(index == 7)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 S
-				else if(index == 8)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 T
-				else if(index == 9)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 주파수
-				else if(index ==10)	pAI->curr_val = strtof(ptr, &endptr);//입력 역률 R
-				else if(index ==11)	pAI->curr_val = strtof(ptr, &endptr);//입력 역률 S
-				else if(index ==12)	pAI->curr_val = strtof(ptr, &endptr);//입력 역률 T
-				else if(index ==13)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//DC 버스 1 전압
-				else if(index ==14)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//DC 버스 2 전압
-				else if(index ==15)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 R
-				else if(index ==16)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 S
-				else if(index ==17)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 T
-				else if(index ==18)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 R
-				else if(index ==19)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 S
-				else if(index ==20)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 T
-				else if(index ==21)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 주파수
-				else if(index ==22)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 R
-				else if(index ==23)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 S
-				else if(index ==24)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 T
-				else if(index ==25)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효 전력 R
-				else if(index ==26)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효 전력 S
-				else if(index ==27)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효 전력 T
-				else if(index ==28)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효 전력 R
-				else if(index ==29)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효 전력 S			
-				else if(index ==30)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효 전력 T
-				else if(index ==31)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상 전력 R
-				else if(index ==32)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상 전력 S
-				else if(index ==33)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상 전력 T
-				else if(index ==34)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 R		
-				else if(index ==35)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 S
-				else if(index ==36)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 T
-				else if(index ==37)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 파고율 R
-				else if(index ==38)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 파고율 S
-				else if(index ==39)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 파고율 T
-				else if(index ==40)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 R
-				else if(index ==41)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 S
-				else if(index ==42)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 T
-				else if(index ==43)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 주파수
-				else if(index ==44)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전압 (+)
-				else if(index ==45)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전류 (+)
-				else if(index ==46)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전압 (-)
-				else if(index ==47)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전류 (-)
-				else if(index ==48)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 Aging Rate
-				else if(index ==49)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 남은 시간
-				else if(index ==50)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 온도
-				else if(index ==51)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 룸 온도
-				else if(index ==52)	pAI->curr_val = strtof(ptr, &endptr);//써머리 경보
+			case SNMP_EMERSON_NXR:
+					 if(index== 0)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 R
+				else if(index== 1)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 S
+				else if(index== 2)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 T
+				else if(index== 3)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 RS
+				else if(index== 4)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 ST
+				else if(index== 5)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전압 TR
+				else if(index== 6)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 R
+				else if(index== 7)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 S
+				else if(index== 8)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 전류 T
+				else if(index== 9)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//입력 주파수
+				else if(index==10)	pAI->curr_val = strtof(ptr, &endptr);//입력 역률 R
+				else if(index==11)	pAI->curr_val = strtof(ptr, &endptr);//입력 역률 S
+				else if(index==12)	pAI->curr_val = strtof(ptr, &endptr);//입력 역률 T
+				else if(index==13)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//DC 버스 1 전압
+				else if(index==14)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//DC 버스 2 전압
+				else if(index==15)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 R
+				else if(index==16)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 S
+				else if(index==17)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전압 T
+				else if(index==18)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 R
+				else if(index==19)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 S
+				else if(index==20)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 전류 T
+				else if(index==21)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 주파수
+				else if(index==22)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 R
+				else if(index==23)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 S
+				else if(index==24)	pAI->curr_val = strtof(ptr, &endptr);//출력 역률 T
+				else if(index==25)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효 전력 R
+				else if(index==26)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효 전력 S
+				else if(index==27)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 유효 전력 T
+				else if(index==28)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효 전력 R
+				else if(index==29)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효 전력 S			
+				else if(index==30)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 무효 전력 T
+				else if(index==31)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상 전력 R
+				else if(index==32)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상 전력 S
+				else if(index==33)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 피상 전력 T
+				else if(index==34)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 R		
+				else if(index==35)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 S
+				else if(index==36)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 로드율 T
+				else if(index==37)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 파고율 R
+				else if(index==38)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 파고율 S
+				else if(index==39)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//출력 파고율 T
+				else if(index==40)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 R
+				else if(index==41)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 S
+				else if(index==42)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 전압 T
+				else if(index==43)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//바이패스 주파수
+				else if(index==44)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전압 (+)
+				else if(index==45)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전류 (+)
+				else if(index==46)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전압 (-)
+				else if(index==47)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 전류 (-)
+				else if(index==48)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 Aging Rate
+				else if(index==49)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 남은 시간
+				else if(index==50)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 온도
+				else if(index==51)	pAI->curr_val = strtof(ptr, &endptr) / 100.;//축전지 룸 온도
+				else if(index==52)	pAI->curr_val = strtof(ptr, &endptr);//써머리 경보
 				else return;
 				break;
 				
@@ -369,8 +370,8 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 				
 			case SNMP_TAEIL_MARCHE:
 				if(index == 0)		pAI->curr_val = strtof(ptr, &endptr) / 10.;//배터리 전압
-				else if(index == 1)	pAI->curr_val = strtof(ptr, &endptr);//배터리 전류
-				else if(index == 2)	pAI->curr_val = strtof(ptr, &endptr);//배터리 온도
+				else if(index == 1)	pAI->curr_val = (signed short)strtof(ptr, &endptr) / 10.;//배터리 전류
+				else if(index == 2)	pAI->curr_val = (signed short)strtof(ptr, &endptr);//배터리 온도
 				else if(index == 3)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(R)
 				else if(index == 4)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(S)
 				else if(index == 5)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(T)
@@ -404,6 +405,39 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 				else if(index ==33)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//바이패스 전력 R
 				else if(index ==34)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//바이패스 전력 S
 				else if(index ==35)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//바이패스 전력 T
+				else return;
+				break;
+				
+			case SNMP_MGE_GALAXY_VM:
+					 if(index == 0)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//배터리 전압
+				else if(index == 1)	pAI->curr_val = strtof(ptr, &endptr);//배터리 전류
+				else if(index == 2)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(R)
+				else if(index == 3)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(S)
+				else if(index == 4)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력주파수(T)
+				else if(index == 5)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 R
+				else if(index == 6)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 S
+				else if(index == 7)	pAI->curr_val = strtof(ptr, &endptr);//입력 전압 T
+				else if(index == 8)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 R
+				else if(index == 9)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 S
+				else if(index ==10)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//입력 전류 T
+				else if(index ==11)	pAI->curr_val = strtof(ptr, &endptr);//출력상태(1/3)상
+				else if(index ==12)	pAI->curr_val = strtof(ptr, &endptr) / 10;//출력 주파수
+				else if(index ==13)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 R
+				else if(index ==14)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 S
+				else if(index ==15)	pAI->curr_val = strtof(ptr, &endptr);//출력 전압 T
+				else if(index ==16)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 R
+				else if(index ==17)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 S
+				else if(index ==18)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//출력 전류 T
+				else if(index ==19)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 R
+				else if(index ==20)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 S
+				else if(index ==21)	pAI->curr_val = strtof(ptr, &endptr) / 1000.;//출력 전력 T
+				else if(index ==22)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 R
+				else if(index ==23)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 S
+				else if(index ==24)	pAI->curr_val = strtof(ptr, &endptr);//출력 로드율 T
+				else if(index ==25)	pAI->curr_val = strtof(ptr, &endptr) / 10.;//바이패스 주파수
+				else if(index ==26)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 R
+				else if(index ==27)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 S
+				else if(index ==28)	pAI->curr_val = strtof(ptr, &endptr);//바이패스 전압 T
 				else return;
 				break;
 				
@@ -462,16 +496,22 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 		
 		if(pAI->use_yn == YES)
 		{
-			if(pAI->alarm_yn == YES)
+			if(pConnInfo->alarm_yn == YES && pAI->alarm_yn == YES)
 			{
 				if(pAI->tm_alarm==0) pAI->tm_alarm = time(NULL);
 
-				if((pAI->curr_val > pAI->critical_high || pAI->curr_val < pAI->critical_low) && pAI->critical_alarm_yn == YES)
+				if(pAI->critical_alarm_yn == YES && (pAI->curr_val > pAI->critical_high || pAI->curr_val < pAI->critical_low))
+				{
 					pAI->curr_status = CRITICAL;
-				else if((pAI->curr_val > pAI->warning_high || pAI->curr_val < pAI->warning_low) && pAI->warning_alarm_yn == YES)
+				}
+				else if(pAI->warning_alarm_yn == YES && (pAI->curr_val > pAI->warning_high || pAI->curr_val < pAI->warning_low))
+				{
 					pAI->curr_status = WARNING;
-				else if((pAI->curr_val > pAI->info_high || pAI->curr_val < pAI->info_low) && pAI->info_alarm_yn == YES)
+				}
+				else if(pAI->info_alarm_yn == YES && (pAI->curr_val > pAI->info_high || pAI->curr_val < pAI->info_low))
+				{
 					pAI->curr_status = INFO;
+				}
 				else
 				{
 					pAI->curr_status = NORMAL;
@@ -485,7 +525,8 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 					if(ai_diff >= pAI->alarm_term)
 					{
 						pAI->send_flag = 1;
-						alarm_insert(OCCURE, index, AI, i, pAI->curr_status);
+
+						alarm_insert(OCCURE, module_idx, AI, index, pAI->curr_status);
 						pAI->last_status = pAI->curr_status;
 						//LOG_ALARM INSERT
 					}
@@ -493,15 +534,15 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 				// 더 상위 알람
 				else if(pAI->send_flag==1 && pAI->last_status < pAI->curr_status)
 				{
-					alarm_insert(CLEAR, index, AI, i, pAI->last_status);
-					alarm_insert(OCCURE, index, AI, i, pAI->curr_status);
+					alarm_insert(CLEAR, module_idx, AI, index, pAI->last_status);
+					alarm_insert(OCCURE, module_idx, AI, index, pAI->curr_status);
 					pAI->last_status = pAI->curr_status;
 				}
 				// 알람이 복구 될때
 				else if(pAI->send_flag == 1 && pAI->curr_status == NORMAL)
 				{
 					pAI->send_flag = 0;
-					alarm_insert(CLEAR, index, AI, i, pAI->last_status);
+					alarm_insert(CLEAR, module_idx, AI, index, pAI->last_status);
 					//LOG_ALARM RECOVER
 				}
 			}
@@ -509,21 +550,21 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 
 
 		ai_diff = difftime(now, pAI->tm_save);
-		if(pAI->save_yn==YES && (ai_diff >= pAI->save_term || pAI->tm_save == 0) )
+		if(pAI->use_yn == YES)
 		{
-			mysqlinsertData(pConnInfo->eseq, pAI->tseq, pAI->curr_val);
-			pAI->tm_save = time(NULL);
-		}
+			if(pAI->save_yn==YES && (ai_diff >= pAI->save_term || pAI->tm_save == 0) )
+			{
+				mysqlinsertData(pConnInfo->eseq, pAI->tseq, pAI->curr_val);
+				pAI->tm_save = time(NULL);
+			}
 
-		/* update가 느려서 임시 처리
-		if(update_diff >= pConnInfo->update_term || pConnInfo->tm_update == 0)
-		{
-			mysqlUpdateTag(pConnInfo->eseq, pAI->tseq, pAI->curr_val);
-			pConnInfo->tm_update = time(NULL);
+			update_diff = difftime(now, pAI->tm_update);
+			if(update_diff >= pAI->update_term || pAI->tm_update == 0)
+			{
+				mysqlUpdateTag(pConnInfo->eseq, pAI->tseq, pAI->curr_val);
+				pAI->tm_update = time(NULL);
+			}
 		}
-		*/
-		mysqlUpdateTag(pConnInfo->eseq, pAI->tseq, pAI->curr_val);
-		pConnInfo->tm_update = time(NULL);
 	}
 	else if(strncmp(type, "DI", 2) == 0)
 	{
@@ -538,7 +579,7 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 
 		if(pDI->use_yn == YES)
 		{
-			if(pDI->alarm_yn == YES)
+			if(pConnInfo->alarm_yn == YES && pDI->alarm_yn == YES)
 			{
 				if(pDI->tm_alarm==0) pDI->tm_alarm = time(NULL);
 
@@ -557,7 +598,7 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 					if(di_diff >= pDI->alarm_term)
 					{
 						pDI->send_flag = 1;
-						alarm_insert(OCCURE, index, DI, i, pDI->curr_status);
+						alarm_insert(OCCURE, module_idx, DI, index, pDI->curr_status);
 						pDI->last_status = pDI->curr_status;
 					}
 				}
@@ -565,29 +606,30 @@ void set_module_status_snmp(const char *oid, char *value, int module_idx, const 
 				else if(pDI->send_flag == 1 && pDI->curr_status == NORMAL)
 				{
 					pDI->send_flag = 0;
-					alarm_insert(CLEAR, index, DI, i, pDI->last_status);
+					alarm_insert(CLEAR, module_idx, DI, index, pDI->last_status);
 				}
 			}
 		}
 
 
-		di_diff = difftime(now, pDI->tm_save);
-		if(pDI->save_yn==YES && (di_diff >= pDI->save_term || pDI->tm_save == 0))
+		if(pDI->use_yn == YES)
 		{
-			mysqlinsertData(pConnInfo->eseq, pDI->tseq, pDI->curr_val);
-			pDI->tm_save = time(NULL);
+			//데이터 로그 인서트
+			di_diff = difftime(now, pDI->tm_save);
+			if(pDI->save_yn==YES && (di_diff >= pDI->save_term || pDI->tm_save == 0))
+			{
+				mysqlinsertData(pConnInfo->eseq, pDI->tseq, pDI->curr_val);
+				pDI->tm_save = time(NULL);
+			}
+			
+			//데이터 로그 업데이트
+			update_diff = difftime(now, pDI->tm_update);
+			if(update_diff >= pDI->update_term || pDI->tm_update == 0)
+			{
+				mysqlUpdateTag(pConnInfo->eseq, pDI->tseq, pDI->curr_val);
+				pDI->tm_update = time(NULL);
+			}
 		}
-		update_diff = difftime(now, pConnInfo->tm_update);
-
-		/* 업데이가 느려서 임시처리
-		if(update_diff >= pConnInfo->update_term || pConnInfo->tm_update == 0)
-		{
-			mysqlUpdateTag(pConnInfo->eseq, pDI->tseq, pDI->curr_val);
-			pConnInfo->tm_update = time(NULL);
-		}
-		*/
-		mysqlUpdateTag(pConnInfo->eseq, pDI->tseq, pDI->curr_val);
-		pConnInfo->tm_update = time(NULL);
 	}
 
 #ifdef DEBUG

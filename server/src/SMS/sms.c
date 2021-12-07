@@ -1038,6 +1038,7 @@ int main(int argc, char** argv)
 					for(j=0; j<rcv_cnt; j++)
 					{					
 						memset(sendStr, 0, sizeof(sendStr));
+						memset(smsStr, 0, sizeof(smsStr));
 						strcpy(smsStr, send_sms_format(sendStr, i, j));
 						
 						status = sendToSmsServer(smsStr);					
@@ -1072,7 +1073,7 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					updateAlarmOccurStatus(alarmList[i]->aseq);
+					updateAlarmClearStatus(alarmList[i]->aseq);
 				}
 			}	
 		}

@@ -39,6 +39,10 @@ struct equip_conn_info
 	int				eth_dev_index;
 	unsigned char	ext_addr;		//확장어드레스
 	char	snmp_read_community[16];//
+	unsigned int	read_term;
+	
+	char    alarm_yn;			// AI 알람 사용 여부(Y, N)
+	char    sms_yn;				// AI sms 사용 여부(Y, N)
 };
 
 struct eth_dev_info {

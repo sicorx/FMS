@@ -68,8 +68,10 @@ void mutex_init_once(void)
     {
         if(conn_info[i]->ai_count > 0)	load_ai_conf(i);
         if(conn_info[i]->di_count > 0)	load_di_conf(i);
-        //load_do_conf(i);
-        initialize_oid(i);
+		if(conn_info[i]->interface_type == DEV_SNMP_TYPE)
+		{
+			initialize_oid(i);
+		}
     }
 	
 }
@@ -191,7 +193,7 @@ void print_config(void)
 	for(i=0; i < equip_count; i++)
 	{
 		fileLog(INFO, "[%s:%d] eseq[%3d], it[%8s], header[%s], model_seq[%4d], tail[%s], ip[%15s], port[%5d], id[%2d], ai_count[%3d], di_count[%3d], do_count[%2d], "
-					  "net_err_count[%2d], timeout[%3d], ext_addr[%2d], READ_COMMUNITY[%s]\n", 
+					  "net_err_count[%2d], timeout[%3d], ext_addr[%2d], READ_COMMUNITY[%s], read_term[%d]\n", 
 		__FUNCTION__, __LINE__, 
 		conn_info[i]->eseq, 
 		conn_info[i]->interface_type == DEV_ETHERNET_TYPE ? STR_DEV_ETHERNET_TYPE : 
@@ -202,14 +204,14 @@ void print_config(void)
 		conn_info[i]->tail == TAIL_MODBUS_CRC16 ? STR_TAIL_MODBUS_CRC16 : STR_TAIL_UNKNOWN_TYPE,
 		conn_info[i]->ip, conn_info[i]->port, conn_info[i]->id, 
 		conn_info[i]->ai_count, conn_info[i]->di_count, conn_info[i]->do_count, 
-		conn_info[i]->net_err_count, conn_info[i]->timeout, conn_info[i]->ext_addr, conn_info[i]->snmp_read_community);
+		conn_info[i]->net_err_count, conn_info[i]->timeout, conn_info[i]->ext_addr, conn_info[i]->snmp_read_community, conn_info[i]->read_term);
 	}
 }
 
 void reprint_config(int index)
 {
 	fileLog(INFO, "[%s:%d] eseq[%3d], it[%8s], header[%s], model_seq[%4d], tail[%s], ip[%15s], port[%5d], id[%2d], ai_count[%3d], di_count[%3d], do_count[%2d], "
-				  "net_err_count[%2d], timeout[%3d], ext_addr[%2d], READ_COMMUNITY[%s]\n", 
+				  "net_err_count[%2d], timeout[%3d], ext_addr[%2d], READ_COMMUNITY[%s], read_term[%d]\n", 
 	__FUNCTION__, __LINE__, 
 	conn_info[index]->eseq, 
 	conn_info[index]->interface_type == DEV_ETHERNET_TYPE ? STR_DEV_ETHERNET_TYPE : 
@@ -220,7 +222,7 @@ void reprint_config(int index)
 	conn_info[index]->tail == TAIL_MODBUS_CRC16 ? STR_TAIL_MODBUS_CRC16 : STR_TAIL_UNKNOWN_TYPE,
 	conn_info[index]->ip, conn_info[index]->port, conn_info[index]->id, 
 	conn_info[index]->ai_count, conn_info[index]->di_count, conn_info[index]->do_count, 
-	conn_info[index]->net_err_count, conn_info[index]->timeout, conn_info[index]->ext_addr, conn_info[index]->snmp_read_community);
+	conn_info[index]->net_err_count, conn_info[index]->timeout, conn_info[index]->ext_addr, conn_info[index]->snmp_read_community, conn_info[index]->read_term);
 }
 
 void load_equip_config(void)
@@ -442,7 +444,7 @@ void *equip_Thread_Ethernet(void *arg)
 	long sec_timeout = 0L, msec_timeout= 0L;
 	char temp_buff[64];
 	//char trap_buff[TRAP_MAX_LEN];
-	unsigned char rwbuff[8192];
+	unsigned char rwbuff[1024*16];
 	struct timeval timeout;
 	struct equip_conn_info *pConnInfo = NULL;
 	struct equip_di *pDI = NULL, *pDI_Net = NULL;
@@ -459,7 +461,7 @@ void *equip_Thread_Ethernet(void *arg)
 
 	/* server_Thread 가 서버와 스타트 트랩을 정상적으로 송수신하고 난 후 
 	* 장애 트랩을 전송하게 몇 초간 쉰다. */
-	sleep(1);
+	sleep(5);
 
 	memset(rwbuff, 0x00, sizeof(rwbuff));
 	memset(temp_buff, 0x00, sizeof(temp_buff));
@@ -485,27 +487,23 @@ void *equip_Thread_Ethernet(void *arg)
 	{
 		
 		if((pStatus->comm_err_count >= pConnInfo->net_err_count)
+			&& (pConnInfo->alarm_yn == YES)
 			&& (pDI_Net->use_yn == YES)
 			&& (pDI_Net->alarm_yn == YES)
 			&& (pDI_Net->critical_alarm_yn == YES)
 			&& (pDI_Net->curr_status == NORMAL)
 			)
-		{
+		{	// 알람 일 때
 			
             pthread_mutex_lock(pStatus->mux);
 			pDI_Net->curr_val = COM_ABNORMAL;
 			pDI_Net->curr_status = CRITICAL;
 			alarm_insert(OCCURE, equip_idx, DI, pConnInfo->di_count-1, CRITICAL);
-			///////////////////////
-			//통신불량 알람 DB 처리 루틴
-			///////////////////////
             pthread_mutex_unlock(pStatus->mux);
 
             memset(rwbuff, 0x00, sizeof(rwbuff));
             set_module_status(rwbuff, equip_idx, COM_ABNORMAL);	//장비데이터 0으로 바꿈
-#ifdef DEBUG
-			fileLog(CRITICAL, "[%s:%d] eseq=[%d] Communication Fail Count: (%d/%d)\n", __FUNCTION__, __LINE__, pConnInfo->eseq, pStatus->comm_err_count, pConnInfo->net_err_count);
-#endif
+			fileLog(CRITICAL, "[%s:%d] eseq=[%d] Communication Fail Count: (current : %d | allow : %d)\n", __FUNCTION__, __LINE__, pConnInfo->eseq, pStatus->comm_err_count, pConnInfo->net_err_count);
 		}
 			
         pthread_mutex_lock(&(gp_eth_dev_info+pConnInfo->eth_dev_index)->lock);
@@ -570,6 +568,8 @@ void *equip_Thread_Ethernet(void *arg)
 				case RTU_OC485					: communicate_func = communicate_rtu_oc485;					break;
 				case RTU_AR_HANE09				: communicate_func = communicate_rtu_ar_hane09;				break;
 				case RTU_AR_HANE09_Q			: communicate_func = communicate_rtu_ar_hane09_q;			break;
+				case DDC400						: communicate_func = communicate_modbus;					break;
+				case DDC_UNKNOWN				: communicate_func = communicate_modbus;					break;
 				//항온항습기 끝 air
 				
 				//분전반 시작 dpm
@@ -677,7 +677,9 @@ void *equip_Thread_Ethernet(void *arg)
 				//case NDTECH_LDCM100_110: communicate_func = communicate_ndtech_modbus;			break;
 				//case TTDM128_RECV		: communicate_func = communicate_ttdm128_recv;			break;
 				case A_LLM1				: communicate_func = communicate_a_llm1;				break;
+
 				case RTU_TTDM128		: communicate_func = communication_rtu_ttdm128;			break;
+
 				case LBSM200			: communicate_func = communicate_modbus;				break;
 				//누수 거리형 끝
 
@@ -717,21 +719,20 @@ void *equip_Thread_Ethernet(void *arg)
 		
         pthread_mutex_unlock(&(gp_eth_dev_info+pConnInfo->eth_dev_index)->lock);
 		
-		if(is_comm_error == 0)
+		if(is_comm_error == 0) //정상 일 때
 		{			
 			pStatus->comm_err_count = 0;
 
             pthread_mutex_lock(pStatus->mux);
 			pDI_Net->curr_val = COM_NORMAL;
-			pDI_Net->curr_status = NORMAL;
 
 			if(pDI_Net->curr_status == CRITICAL)
 			{
 				alarm_insert(CLEAR, equip_idx, DI, pConnInfo->di_count-1, CRITICAL);
+				
+				pDI_Net->curr_status = NORMAL;  
 			}
-			///////////////////////
-			//통신정상 알람 DB 처리 루틴
-			///////////////////////
+
             pthread_mutex_unlock(pStatus->mux);
 
 			set_module_status(rwbuff, equip_idx, COM_NORMAL);
@@ -765,13 +766,14 @@ void *equip_Thread_Ethernet(void *arg)
 				pDI_Net->tm_update = time(NULL);
 			}
 		}
+		sleep(pConnInfo->read_term);
 	}
 	return (void*)1;	//void return인데 리턴 안쓰면 warning 남 확인 필요
 }
 
 void *equip_Thread_SNMP(void *arg)
 {
-    int equip_idx, err_stat, wbytes = 0;
+    int equip_idx, wbytes = 0;
 	int is_comm_error = 0;
     long sec_timeout = 0L, msec_timeout= 0L;
     char rwbuff[128], temp_buff[128];
@@ -785,7 +787,12 @@ void *equip_Thread_SNMP(void *arg)
     FILE *fp=NULL;
     char *ptr=NULL, *ptrptr=NULL;
 
+	double di_diff, update_diff;
+
     pthread_detach(pthread_self());
+
+	time_t now;
+	now = time(NULL);
 
     equip_idx = *((int *)arg);
     free(arg);
@@ -812,6 +819,7 @@ void *equip_Thread_SNMP(void *arg)
 	for(;;)
 	{
 		if((pStatus->comm_err_count >= pConnInfo->net_err_count)
+			&& (pConnInfo->alarm_yn == YES)
 			&& (pDI_Net->use_yn == YES)
 			&& (pDI_Net->alarm_yn == YES)
 			&& (pDI_Net->critical_alarm_yn == YES)
@@ -823,9 +831,6 @@ void *equip_Thread_SNMP(void *arg)
 			pDI_Net->curr_val = COM_ABNORMAL;
 			pDI_Net->curr_status = CRITICAL;
 			alarm_insert(OCCURE, equip_idx, DI, pConnInfo->di_count-1, CRITICAL);
-			///////////////////////
-			//통신불량 알람 DB 처리 루틴
-			///////////////////////
             pthread_mutex_unlock(pStatus->mux);
 
             memset(rwbuff, 0x00, sizeof(rwbuff));
@@ -841,21 +846,21 @@ void *equip_Thread_SNMP(void *arg)
             fileLog(CRITICAL, "<<<<<<<<<< UPS(%d) SNMP GET >>>>>>>>>>\n", pConnInfo->eseq);
 #endif
 
-            err_stat = 0;
+            is_comm_error = 0;
 
 			if(uid==0)
 			{
-				err_stat = isRemoteHostAlive(pConnInfo->ip); // root 권한만 사용가능
-				if(err_stat != 0)
+				is_comm_error = isRemoteHostAlive(pConnInfo->ip); // root 권한만 사용가능
+				if(is_comm_error != 0)
 				{
 					pStatus->comm_err_count++;
 					break;
 				}
 			}
 
-			err_stat = get_synchronous_snmp(equip_idx);
+			is_comm_error = get_synchronous_snmp(equip_idx);
 
-            if(err_stat != 0)
+            if(is_comm_error != 0)
             {
                 pStatus->comm_err_count++;
                 break;
@@ -863,21 +868,17 @@ void *equip_Thread_SNMP(void *arg)
 			else
 			{
                 pStatus->comm_err_count = 0;
-			}
-
-			if(pStatus->comm_err_count == 0)
-			{
 				pthread_mutex_lock(pStatus->mux);
 				pDI_Net->curr_val = COM_NORMAL;
-				pDI_Net->curr_status = NORMAL;
 
 				if(pDI_Net->curr_status == CRITICAL)
 				{
 					alarm_insert(CLEAR, equip_idx, DI, pConnInfo->di_count-1, CRITICAL);
+					pDI_Net->curr_status = NORMAL;
 				}
 				pthread_mutex_unlock(pStatus->mux);
-
 			}
+
 
 
 		} while(0);
@@ -885,7 +886,25 @@ void *equip_Thread_SNMP(void *arg)
         pthread_mutex_unlock(&snmp_lock);
 		
 
-		sleep(10); // Sleep For Debugging
+		if(pDI_Net->use_yn == YES)
+		{
+			//데이터 로그 인서트
+			di_diff = difftime(now, pDI_Net->tm_save);
+			if(pDI_Net->save_yn==YES && (di_diff >= pDI_Net->save_term || pDI_Net->tm_save == 0))
+			{
+				mysqlinsertData(pConnInfo->eseq, pDI_Net->tseq, pDI_Net->curr_val);
+				pDI_Net->tm_save = time(NULL);
+			}
+			
+			//데이터 로그 업데이트
+			update_diff = difftime(now, pDI_Net->tm_update);
+			if(update_diff >= pDI_Net->update_term || pDI_Net->tm_update == 0)
+			{
+				mysqlUpdateTag(pConnInfo->eseq, pDI_Net->tseq, pDI_Net->curr_val);
+				pDI_Net->tm_update = time(NULL);
+			}
+		}
+		sleep(pConnInfo->read_term);
 	}
 
 	return NULL;

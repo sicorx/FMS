@@ -17,7 +17,7 @@
 #define TERMINAL_COLOR_YELLOW	"\x1b[33m"
 
 #define MAX_SERVICE_COUNT	400
-#define EQUIP_SEQ		15
+#define EQUIP_SEQ		432
 
 #define YES			1
 #define NO			-1

@@ -981,7 +981,7 @@ int communication_rtu_ttdm128(int fd, unsigned char *buff, int index)
     for(i=0; i<(int)sizeof(cmdCode)/(int)sizeof(int); i++)
     {
         memset(rxtmp, 0x00, sizeof(rxtmp));
-		wbytes = make_modbus_frame(index, rxtmp, 1, cmdCode[i], (pConnInfo->id-1), wordCnt[i], NULL);
+		wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], (pConnInfo->ext_addr-1), wordCnt[i], NULL);
         if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(WARNING, "SERVER -> RTU_TTDM128 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
 
         memset(rxtmp, 0x00, sizeof(rxtmp));
@@ -1023,6 +1023,8 @@ int communicate_modbus(int fd, unsigned char *buff, int index)
 		case SP_INC				: cmd = 0x03;					addr = 0x0000;					count = 2;						break;
 		case KM6053				: cmd = 0x04;					addr = 0x0080;					count = 1;						break;
 		case LBSM200			: cmd = 0x04;					addr = 0x0001;					count = 2;						break;
+		case DDC400				: cmd = 0x03;					addr = 200;						count = 62;						break;
+		case DDC_UNKNOWN		: cmd = 0x03;					addr = 200;						count = 82;						break;
 		default : return -1;
 	}
 	wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmd, addr, count, NULL);

@@ -34,6 +34,8 @@
 #define SNMP_EMERSON_APM					0x0185
 #define SNMP_HIPULSE_V1310					0x0186
 #define SNMP_TAEIL_MARCHE					0x0187
+#define SNMP_MGE_GALAXY_VM					0x0188
+#define SNMP_EMERSON_NXR					0x0189
 
 /* UPS_MGE_GTC 에 사용되는 타입 정의 */
 #define MGE_GTC_CURRENT_FIELD_ADDR          0x0100
