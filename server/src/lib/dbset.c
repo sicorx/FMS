@@ -738,14 +738,14 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i== 8) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[16], p[17]) / 10.; // RS상전압
 				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[18], p[19]) / 10.; // ST상전압
 				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[20], p[21]) / 10.; // TR상전압
-				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[22], p[23]) / 10.; // 역률
+				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[22], p[23]) / 10.; // 역률
 				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[24], p[25]) / 10.; // 유효전력
-				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[26], p[27]) / 10.; // 무효전력
+				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[26], p[27]) / 10.; // 무효전력
 				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[28], p[29]) / 10.; // 피상전력
 				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[30], p[31]) / 10.; // 주파수
-				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[32], p[33]) / 10.; // 유효전력량
-				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[34], p[35]) / 10.; // 무효전력량
-				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[36], p[37]) / 10.; // 피상전력량
+				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[32], p[33]) ; // 유효전력량
+				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[34], p[35]) / 10.; // 무효전력량
+				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[36], p[37]) / 10.; // 피상전력량
 				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[38], p[39]) / 10.; // Ia부하율
 				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[40], p[41]) / 10.; // Ib부하율
 				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[42], p[43]) / 10.; // Ic부하율
@@ -788,11 +788,11 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i== 9) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[18], p[19]) / 10.; // S상전류
 				else if(i==10) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[20], p[21]) / 10.; // T상전류
 				else if(i==11) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[22], p[23]) / 10.; // 주파수
-				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[24], p[25]) / 10.; // 역률
+				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[24], p[25]) / 10.; // 역률
 				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[26], p[27]) / 10.; // 유효전력
-				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[28], p[29]) / 10.; // 유효전력량
-				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[30], p[31]) / 10.; // 무효전력
-				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[32], p[33]) / 10.; // 무효전력량
+				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[28], p[29]); // 유효전력량
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[30], p[31]) / 10.; // 무효전력
+				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[32], p[33]) / 10.; // 무효전력량
 				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[34], p[35]) / 10.; // 위상차(R)
 				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[36], p[37]) / 10.; // 위상차(S)
 				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[38], p[39]) / 10.; // 위상차(T)
@@ -852,13 +852,13 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				else if(i==12) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[24], p[25]) / 10.; // 정상전류
 				else if(i==13) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[26], p[27]) / 10.; // 역상전류
 				else if(i==14) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[28], p[29]) / 10.; // 유효전력
-				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[30], p[31]) / 10.; // 무효전력
+				else if(i==15) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[30], p[31]) / 10.; // 무효전력
 				else if(i==16) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[32], p[33]) / 10.; // 피상전력
-				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[34], p[35]) / 10.; // 유효전력량
-				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[36], p[37]) / 10.; // 무효전력량
+				else if(i==17) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[34], p[35]); // 유효전력량
+				else if(i==18) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[36], p[37]) / 10.; // 무효전력량
 				else if(i==19) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[38], p[39]) / 10.; // 역유효전력량
 				else if(i==20) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[40], p[41]) / 10.; // 주파수
-				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[42], p[43]) / 10.; // 역률
+				else if(i==21) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_short_value(p[42], p[43]) / 10.; // 역률
 				else if(i==22) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[44], p[45]) / 10.; // R상전류역률
 				else if(i==23) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[46], p[47]) / 10.; // S상전류역률
 				else if(i==24) pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : get_int_value2(p[48], p[49]) / 10.; // T상전류역률
@@ -1504,7 +1504,7 @@ void set_module_status(unsigned char *buff, int index, int com_state)
 				
 			case RTU_TTDM128 :
 				if(i == 0)
-				pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : p[0] & 0x01 ? (float)get_float_value4(p[1], p[2], p[3], p[4]) : 0.0;	//누수거리
+				pAI->curr_val = com_state==COM_ABNORMAL ? 0.0 : p[4] == 1 ? get_float_value4(p[0], p[1], p[2], p[3]) : 0.0;	//누수거리
 				
 				else { pthread_mutex_unlock(pStatus->mux); continue; } break;
 

@@ -972,8 +972,8 @@ int communication_rtu_ttdm128(int fd, unsigned char *buff, int index)
 
     int wbytes=0;
     unsigned char rxtmp[512];
-    int cmdCode[]={0x02, 0x03},
-        wordCnt[]={1, 2};
+    int cmdCode[]={0x03, 0x02},
+        wordCnt[]={2, 1};
     struct equip_conn_info *pConnInfo = conn_info[index];
 
     usleep(100000);
@@ -981,7 +981,14 @@ int communication_rtu_ttdm128(int fd, unsigned char *buff, int index)
     for(i=0; i<(int)sizeof(cmdCode)/(int)sizeof(int); i++)
     {
         memset(rxtmp, 0x00, sizeof(rxtmp));
-		wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], (pConnInfo->ext_addr-1), wordCnt[i], NULL);
+		if(cmdCode[i] == 0x02)
+		{
+			wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], (pConnInfo->ext_addr-1), wordCnt[i], NULL);
+		}
+		else
+		{
+			wbytes = make_modbus_frame(index, rxtmp, pConnInfo->id, cmdCode[i], (pConnInfo->ext_addr-1)*2, wordCnt[i], NULL);
+		}
         if(sendto_module(fd, rxtmp, wbytes) != 0)							{ fileLog(WARNING, "SERVER -> RTU_TTDM128 eseq=[%d] Packet Send Fail\n", pConnInfo->eseq); return -1; }
 
         memset(rxtmp, 0x00, sizeof(rxtmp));
